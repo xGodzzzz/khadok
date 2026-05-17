@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Khadok | Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Template CSS (rename/path as needed) -->
+  <link rel="stylesheet" href="css/login.css">
+
+  <!-- Boxicons for form icons -->
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+  <!-- Font Awesome for home icon -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  />
+</head>
+<body>
+
+  <!-- Home Icon -->
+  <a href="index.html" class="home-icon" title="Go to Landing Page">
+    <i class="fa-solid fa-house"></i>
+  </a>
+
+  <div class="wrapper">
+    <div class="form-header">
+      <div class="titles">
+        <div class="title-login">Login</div>
+      </div>
+    </div>
+
+    <!-- SINGLE LOGIN FORM -->
+    <form id="loginForm" class="login-form" autocomplete="off">
+      <div class="input-box">
+        <input
+          type="email"
+          class="input-field"
+          id="log-email"
+          placeholder=" "
+          required
+        />
+        <label for="log-email" class="label">Email</label>
+        <i class='bx bx-envelope icon'></i>
+      </div>
+
+      <div class="input-box">
+        <input
+          type="password"
+          class="input-field"
+          id="log-pass"
+          placeholder=" "
+          required
+        />
+        <label for="log-pass" class="label">Password</label>
+        <i class='bx bx-lock-alt icon'></i>
+      </div>
+
+      <div class="form-cols">
+        <div class="col-1"></div>
+        <div class="col-2">
+          <a href="#">Forgot password?</a>
+        </div>
+      </div>
+
+      <div class="input-box">
+        <button class="btn-submit" id="SignInBtn" type="submit">
+          Sign In <i class='bx bx-log-in'></i>
+        </button>
+      </div>
+
+      <div class="switch-form">
+        <span>Don't have an account? <a href="signup.html">Register</a></span>
+      </div>
+    </form>
+  </div>
+
+  <!-- Your existing login script (updated IDs below) -->
+  <script src="js/login_script.js"></script>
+</body>
+</html>

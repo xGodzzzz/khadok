@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0c1222;
+            --bg-2: #121a31;
+            --panel: rgba(16, 22, 41, 0.72);
+            --panel-strong: rgba(255, 255, 255, 0.92);
+            --text: #f5f7fb;
+            --muted: rgba(245, 247, 251, 0.72);
+            --line: rgba(255, 255, 255, 0.10);
+            --accent: #ff7a45;
+            --accent-2: #49d6c6;
+            --shadow: 0 30px 80px rgba(0, 0, 0, 0.38);
+            --radius-xl: 32px;
+            --radius-lg: 24px;
+            --radius-md: 16px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            min-height: 100%;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at 12% 10%, rgba(255, 122, 69, 0.22), transparent 34%),
+                radial-gradient(circle at 86% 18%, rgba(73, 214, 198, 0.18), transparent 30%),
+                linear-gradient(135deg, var(--bg), var(--bg-2));
+            overflow: hidden;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .page-shell {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: grid;
+            grid-template-columns: minmax(0, 1.1fr) minmax(420px, 0.9fr);
+            gap: 24px;
+            padding: 24px;
+        }
+
+        .page-shell::before,
+        .page-shell::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(12px);
+            pointer-events: none;
+        }
+
+        .page-shell::before {
+            inset: auto auto 10% -80px;
+            width: 240px;
+            height: 240px;
+            background: rgba(255, 122, 69, 0.12);
+        }
+
+        .page-shell::after {
+            inset: 8% 6% auto auto;
+            width: 180px;
+            height: 180px;
+            background: rgba(73, 214, 198, 0.12);
+        }
+
+        .brand-panel,
+        .login-panel {
+            position: relative;
+            z-index: 1;
+            border: 1px solid var(--line);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .brand-panel {
+            border-radius: var(--radius-xl);
+            background:
+                linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03)),
+                linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+            backdrop-filter: blur(18px);
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 24px;
+        }
+
+        .top-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+        }
+
+        .home-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text);
+            border: 1px solid var(--line);
+            backdrop-filter: blur(10px);
+            font-size: 0.95rem;
+        }
+
+        .brand-mark {
+            width: 58px;
+            height: 58px;
+            border-radius: 18px;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(135deg, rgba(255, 122, 69, 0.2), rgba(73, 214, 198, 0.2));
+            border: 1px solid var(--line);
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+        }
+
+        .brand-hero {
+            max-width: 560px;
+            padding-top: 8px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--accent-2);
+            border: 1px solid var(--line);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            font-size: 0.76rem;
+            font-weight: 700;
+        }
+
+        .brand-hero h1 {
+            margin: 18px 0 12px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(3rem, 5vw, 5.2rem);
+            line-height: 0.95;
+            letter-spacing: -0.05em;
+        }
+
+        .brand-hero p {
+            max-width: 54ch;
+            margin: 0;
+            color: var(--muted);
+            font-size: 1.02rem;
+            line-height: 1.7;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .stat-card {
+            border-radius: 24px;
+            border: 1px solid var(--line);
+            background: rgba(255, 255, 255, 0.06);
+            padding: 18px;
+            backdrop-filter: blur(12px);
+        }
+
+        .stat-card strong {
+            display: block;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 6px;
+        }
+
+        .stat-card span {
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        .feature-list {
+            display: grid;
+            gap: 12px;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+        .feature-list li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--line);
+        }
+
+        .feature-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 0 6px rgba(255, 122, 69, 0.10);
+            flex: 0 0 auto;
+        }
+
+        .login-panel {
+            border-radius: var(--radius-xl);
+            background: rgba(255, 255, 255, 0.10);
+            backdrop-filter: blur(20px);
+            display: grid;
+            place-items: center;
+            padding: 22px;
+        }
+
+        .login-card {
+            width: min(100%, 460px);
+            border-radius: 28px;
+            background: rgba(255, 255, 255, 0.96);
+            color: #172033;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .login-card .panel-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 26px;
+        }
+
+        .panel-title h2 {
+            margin: 0 0 6px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+            letter-spacing: -0.03em;
+        }
+
+        .panel-title p {
+            margin: 0;
+            color: #596173;
+            line-height: 1.55;
+        }
+
+        .access-chip {
+            padding: 10px 14px;
+            border-radius: 999px;
+            background: #f5f7fb;
+            color: #31405f;
+            border: 1px solid rgba(17, 24, 39, 0.08);
+            font-size: 0.85rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .field {
+            position: relative;
+            margin-top: 16px;
+        }
+
+        .field input {
+            width: 100%;
+            height: 58px;
+            border: 1px solid rgba(17, 24, 39, 0.10);
+            border-radius: 18px;
+            background: #f7f9fc;
+            padding: 18px 18px 18px 50px;
+            font: inherit;
+            font-size: 1rem;
+            color: #172033;
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+        }
+
+        .field input:focus {
+            border-color: rgba(255, 122, 69, 0.35);
+            box-shadow: 0 0 0 4px rgba(255, 122, 69, 0.12);
+            transform: translateY(-1px);
+        }
+
+        .field .icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 22px;
+            height: 22px;
+            border-radius: 8px;
+            display: grid;
+            place-items: center;
+            color: var(--accent);
+        }
+
+        .field .label {
+            display: block;
+            margin-top: 10px;
+            font-size: 0.86rem;
+            color: #6b7280;
+        }
+
+        .login-links {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-top: 12px;
+            font-size: 0.92rem;
+        }
+
+        .login-links a {
+            color: #596173;
+        }
+
+        .login-links a:hover {
+            color: var(--accent);
+        }
+
+        #login-error {
+            min-height: 20px;
+            margin: 14px 0 0;
+            color: #c0392b;
+            font-weight: 600;
+        }
+
+        .login-btn {
+            width: 100%;
+            height: 56px;
+            margin-top: 16px;
+            border: none;
+            border-radius: 18px;
+            background: linear-gradient(135deg, var(--accent), #ff5e6c);
+            color: white;
+            font: inherit;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            cursor: pointer;
+            box-shadow: 0 18px 30px rgba(255, 122, 69, 0.28);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 20px 34px rgba(255, 122, 69, 0.34);
+        }
+
+        .login-footer {
+            margin-top: 18px;
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            color: #6b7280;
+            font-size: 0.88rem;
+        }
+
+        .floating-badge {
+            position: absolute;
+            right: 24px;
+            bottom: 24px;
+            padding: 12px 16px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--line);
+            backdrop-filter: blur(14px);
+            color: var(--text);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 1120px) {
+            body {
+                overflow: auto;
+            }
+
+            .page-shell {
+                grid-template-columns: 1fr;
+                height: auto;
+                min-height: 100vh;
+                padding: 18px;
+            }
+
+            .brand-panel {
+                min-height: 360px;
+            }
+        }
+
+        @media (max-width: 760px) {
+            .page-shell {
+                padding: 14px;
+            }
+
+            .brand-panel,
+            .login-card {
+                border-radius: 24px;
+            }
+
+            .login-card {
+                padding: 24px;
+            }
+
+            .brand-hero h1 {
+                font-size: clamp(2.3rem, 12vw, 3.4rem);
+            }
+
+            .stats-row {
+                grid-template-columns: 1fr;
+            }
+
+            .login-links {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-shell">
+        <section class="brand-panel">
+            <div class="top-row">
+                <a href="index.html" class="home-pill">← Back to site</a>
+                <div class="brand-mark">KH</div>
+            </div>
+
+            <div class="brand-hero">
+                <div class="eyebrow">Admin control room</div>
+                <h1>Khadok runs here.</h1>
+                <p>Secure access for operations, orders, payments, riders, restaurants, and support management in one focused workspace.</p>
+            </div>
+
+            <div class="stats-row">
+                <div class="stat-card">
+                    <strong>Live</strong>
+                    <span>Operations visibility</span>
+                </div>
+                <div class="stat-card">
+                    <strong>Fast</strong>
+                    <span>Decision making</span>
+                </div>
+                <div class="stat-card">
+                    <strong>Safe</strong>
+                    <span>Protected admin entry</span>
+                </div>
+            </div>
+
+            <ul class="feature-list">
+                <li><span class="feature-dot"></span><span>Review orders, riders, and tickets without leaving the dashboard.</span></li>
+                <li><span class="feature-dot"></span><span>Track payments, reservations, menus, and stakeholder activity.</span></li>
+                <li><span class="feature-dot"></span><span>Maintain a clean workflow with a focused, modern interface.</span></li>
+            </ul>
+        </section>
+
+        <section class="login-panel">
+            <form id="admin-login-form" class="login-card">
+                <div class="panel-head">
+                    <div class="panel-title">
+                        <h2>Admin sign in</h2>
+                        <p>Enter your admin credentials to continue.</p>
+                    </div>
+                    <div class="access-chip">Secure access</div>
+                </div>
+
+                <div class="field">
+                    <span class="icon">✦</span>
+                    <input type="email" name="email" placeholder="Admin email" autocomplete="email" required>
+                    <span class="label">Email</span>
+                </div>
+
+                <div class="field">
+                    <span class="icon">⌁</span>
+                    <input type="password" name="password" placeholder="Password" autocomplete="current-password" required>
+                    <span class="label">Password</span>
+                </div>
+
+                <div class="login-links">
+                    <a href="#">Forgot password?</a>
+                    <span>Only authorized admin accounts can continue.</span>
+                </div>
+
+                <p id="login-error"></p>
+
+                <button type="submit" class="login-btn">Enter dashboard</button>
+
+                <div class="login-footer">
+                    <span>Protected by session auth</span>
+                    <span>Backend unchanged</span>
+                </div>
+            </form>
+        </section>
+
+        <div class="floating-badge">Khadok admin interface</div>
+    </div>
+
+    <script>
+        const loginForm = document.getElementById('admin-login-form');
+        const loginError = document.getElementById('login-error');
+
+        loginForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            loginError.textContent = '';
+
+            const formData = new FormData(loginForm);
+            const email = formData.get('email');
+            const password = formData.get('password');
+
+            try {
+                const response = await fetch('/api/admin/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ email, password })
+                });
+
+                const payload = await response.json();
+                if (!response.ok || !payload.success) {
+                    throw new Error(payload.message || 'Login failed');
+                }
+
+                if (payload?.user?.role !== 'admin') {
+                    throw new Error('Only admin accounts can access this panel');
+                }
+
+                if (payload.sessionId) {
+                    localStorage.setItem('sessionId', payload.sessionId);
+                }
+
+                window.location.href = payload.redirect || '/admin/index.html';
+            } catch (error) {
+                loginError.textContent = error.message;
+            }
+        });
+    </script>
+</body>
+</html>
