@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="admin-modern.css">
+    <title>Admin Dashboard</title>
+</head>
+
+<body data-page="dashboard">
+
+    <div class="container">
+        <!-- Sidebar Section -->
+        <aside>
+            <div class="toggle">
+                <div class="logo">
+                    <img src="images/logo.png">
+                    <h2>K H A D O K</h2>
+                </div>
+                <div class="close" id="close-btn">
+                    <span class="material-icons-sharp">
+                        close
+                    </span>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <a href="#" class="active">
+                    <span class="material-icons-sharp">
+                        dashboard
+                    </span>
+                    <h3>Dashboard</h3>
+                </a>
+                <a href="adminconsumer.html">
+                    <span class="material-icons-sharp">
+                        person_outline
+                    </span>
+                    <h3>Consumer</h3>
+                </a>
+                <a href="adminstakeholder.html">
+                    <span class="material-icons-sharp">
+                        receipt_long
+                    </span>
+                    <h3>Stakeholder</h3>
+                </a>
+                <a href="adminriders.html">
+                    <span class="material-icons-sharp">
+                        delivery_dining
+                    </span>
+                    <h3>Riders</h3>
+                </a>
+                <a href="adminorders.html">
+                    <span class="material-icons-sharp">
+                        shopping_bag
+                    </span>
+                    <h3>Orders</h3>
+                </a>
+                <a href="adminpayments.html">
+                    <span class="material-icons-sharp">
+                        payments
+                    </span>
+                    <h3>Payments</h3>
+                </a>
+                <a href="adminreservations.html">
+                    <span class="material-icons-sharp">
+                        event
+                    </span>
+                    <h3>Reservations</h3>
+                </a>
+                <a href="adminmenus.html">
+                    <span class="material-icons-sharp">
+                        restaurant_menu
+                    </span>
+                    <h3>Menus</h3>
+                </a>
+                <a href="admininsights.html" >
+                    <span class="material-icons-sharp">
+                        insights
+                    </span>
+                    <h3>Insights</h3>
+                </a>
+                <a href="admintickets.html">
+                    <span class="material-icons-sharp">
+                        mail_outline
+                    </span>
+                    <h3>Tickets</h3>
+                    <span class="message-count">27</span>
+                </a>
+                <a href="adminreport.html">
+                    <span class="material-icons-sharp">
+                        report_gmailerrorred
+                    </span>
+                    <h3>Report</h3>
+                </a>
+                <a href="adminsettings.html">
+                    <span class="material-icons-sharp">
+                        settings
+                    </span>
+                    <h3>Settings</h3>
+                </a>
+                <a href="../index.html">
+                    <span class="material-icons-sharp">
+                        logout
+                    </span>
+                    <h3>Logout</h3>
+                </a>
+            </div>
+        </aside>
+        <!-- End of Sidebar Section -->
+
+        <!-- Main Content -->
+        <main>
+            <div class="dashboard-hero">
+                <div class="hero-copy">
+                    <div class="eyebrow">Command center</div>
+                    <h1>Operate Khadok from one place.</h1>
+                    <p>Monitor consumers, vendors, riders, orders, payments, reservations, and support activity in real time.</p>
+                </div>
+                <div class="hero-actions">
+                    <a class="btn-soft" href="adminorders.html">Manage orders</a>
+                    <a class="btn-soft" href="admininsights.html">View analytics</a>
+                    <a class="btn-soft" href="adminreport.html">Export reports</a>
+                </div>
+            </div>
+            <h1 style="margin-top:18px;">Overview</h1>
+            <div class="analyse">
+                <div class="sales">
+                    <div class="status">
+                        <div class="info">
+                            <h3>Total Consumers</h3>
+                            <h1 id="countConsumers">--</h1>
+                        </div>
+                    </div>
+                </div>
+                <div class="visits">
+                    <div class="status">
+                        <div class="info">
+                            <h3>Total Stakeholders</h3>
+                            <h1 id="countStakeholders">--</h1>
+                        </div>
+                    </div>
+                </div>
+                <div class="searches">
+                    <div class="status">
+                        <div class="info">
+                            <h3>Total Riders</h3>
+                            <h1 id="countRiders">--</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="analyse">
+                <div class="sales">
+                    <div class="status">
+                        <div class="info">
+                            <h3>Total Orders</h3>
+                            <h1 id="countOrders">--</h1>
+                        </div>
+                    </div>
+                </div>
+                <div class="visits">
+                    <div class="status">
+                        <div class="info">
+                            <h3>Total Payments</h3>
+                            <h1 id="countPayments">--</h1>
+                        </div>
+                    </div>
+                </div>
+                <div class="searches">
+                    <div class="status">
+                        <div class="info">
+                            <h3>Total Reservations</h3>
+                            <h1 id="countReservations">--</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="analyse">
+                <div class="sales">
+                    <div class="status">
+                        <div class="info">
+                            <h3>Open Tickets</h3>
+                            <h1 id="countTickets">--</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+           
+
+            <!-- Recent Orders Table -->
+            <div class="recent-orders">
+                <h2>Recent Orders</h2>
+                <div id="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Consumer</th>
+                                <th>Restaurant</th>
+                                <th>Order Status</th>
+                                <th>Delivery Status</th>
+                                <th>Payment Status</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recent-orders-body">
+                            <!-- Data will be dynamically injected here -->
+                        </tbody>
+                    </table>
+                </div>
+            <!-- End of Recent Orders -->
+
+        </main>
+        <!-- End of Main Content -->
+         
+
+        <!-- Right Section -->
+        <div class="right-section">
+            <div class="nav">
+                <button id="menu-btn" aria-label="Open sidebar">
+                    <span class="material-icons-sharp">menu</span>
+                </button>
+                <div class="dark-mode" aria-label="Toggle theme">
+                    <span class="material-icons-sharp active">light_mode</span>
+                    <span class="material-icons-sharp">dark_mode</span>
+                </div>
+            </div>
+            <!-- End of Nav -->
+
+            <div class="user-profile">
+                <div class="logo">
+                    <img src="images/logo.png" alt="Khadok logo">
+                    <h2>Operations hub</h2>
+                    <p>Live control for service, support, and fulfillment</p>
+                </div>
+            </div>
+
+            <div class="reminders">
+                <div class="header">
+                    <h2>Quick actions</h2>
+                    <span class="material-icons-sharp">notifications_none</span>
+                </div>
+
+                <div class="notification">
+                    <div class="icon">
+                        <span class="material-icons-sharp">shopping_bag</span>
+                    </div>
+                    <div class="content">
+                        <div class="info">
+                            <h3>Review live orders</h3>
+                            <small class="text_muted">Update order, rider, and delivery statuses</small>
+                        </div>
+                        <span class="material-icons-sharp">more_vert</span>
+                    </div>
+                </div>
+
+                <div class="notification deactive">
+                    <div class="icon">
+                        <span class="material-icons-sharp">support_agent</span>
+                    </div>
+                    <div class="content">
+                        <div class="info">
+                            <h3>Resolve support tickets</h3>
+                            <small class="text_muted">Triage open issues and close resolved cases</small>
+                        </div>
+                        <span class="material-icons-sharp">more_vert</span>
+                    </div>
+                </div>
+
+                <div class="notification deactive">
+                    <div class="icon">
+                        <span class="material-icons-sharp">payments</span>
+                    </div>
+                    <div class="content">
+                        <div class="info">
+                            <h3>Verify payments</h3>
+                            <small class="text_muted">Confirm pending payment records and exceptions</small>
+                        </div>
+                        <span class="material-icons-sharp">more_vert</span>
+                    </div>
+                </div>
+
+                <div class="notification add-reminder">
+                    <div>
+                        <span class="material-icons-sharp">add</span>
+                        <h3>Open a task</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="index.js"></script>
+    <script src="adminPanel.js"></script>
+</body>
+
+</html>
