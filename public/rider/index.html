@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rider Dashboard - KHADOK</title>
+    <!-- ======= Styles ====== -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <style>
+        /* Popup Overlay */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(20, 20, 20, 0.7);
+            backdrop-filter: blur(6px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+        
+        .popup-content {
+            background: #fff;
+            border-radius: 12px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+            position: relative;
+            text-align: center;
+            animation: fadeIn 0.3s ease-in-out;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .popup-screen {
+            display: none;
+        }
+        
+        .popup-screen.active {
+            display: block;
+        }
+        
+        .popup-content h2, .popup-content h3 {
+            color: #2a3d66;
+            margin-bottom: 20px;
+        }
+        
+        .popup-content label {
+            display: block;
+            text-align: left;
+            margin: 12px 0 6px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .popup-content input[type="text"],
+        .popup-content input[type="tel"],
+        .popup-content input[type="file"],
+        .popup-content select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 12px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        
+        .primary-btn, .secondary-btn {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .primary-btn {
+            background-color: #00b894;
+            color: white;
+        }
+        
+        .primary-btn:hover {
+            background-color: #019874;
+        }
+        
+        .secondary-btn {
+            background-color: #dfe6e9;
+            color: #2d3436;
+            margin-right: 10px;
+        }
+        
+        .secondary-btn:hover {
+            background-color: #b2bec3;
+        }
+        
+        .button-group {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .highlight {
+            color: #00b894;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .location-input-wrapper {
+            position: relative;
+        }
+        
+        .location-suggestions {
+            position: absolute;
+            top: calc(100% - 1px);
+            left: 0;
+            width: 100%;
+            max-height: 200px;
+            overflow-y: auto;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            list-style: none;
+            z-index: 1000;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .location-suggestions li {
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .location-suggestions li:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        #map-container {
+            height: 250px;
+            margin-top: 12px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #ddd;
+            position: relative;
+        }
+        
+        .locate-me-btn {
+            position: absolute;
+            top: 50%;
+            right: 8px;
+            transform: translateY(-50%);
+            width: 34px;
+            height: 34px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            z-index: 10;
+        }
+        
+        .locate-me-btn:hover {
+            background-color: #f0f0f0;
+        }
+        
+        /* Status Toggle Buttons */
+        .status-btn {
+            padding: 8px 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 8px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .status-btn:hover:not(:disabled) {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .status-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .status-btn.active {
+            background: white;
+            border-color: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        
+        .status-btn.status-available.active {
+            color: #00b894;
+        }
+        
+        .status-btn.status-busy.active {
+            color: #f39c12;
+        }
+        
+        .status-btn.status-break.active {
+            color: #3498db;
+        }
+        
+        .status-btn.status-offline.active {
+            color: #e74c3c;
+        }
+        
+        @media (max-width: 768px) {
+            .status-btn {
+                font-size: 0.75rem;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- =============== Navigation ================ -->
+    <div class="container">
+        <div class="navigation">
+            <ul>
+                <li>
+                    <a href="#">
+                        <span class="icon">
+                            <ion-icon name="beer-outline"></ion-icon>
+                        </span>
+                        <span class="title">K H A D O K</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
+                        <span class="icon">
+                            <ion-icon name="home-outline"></ion-icon>
+                        </span>
+                        <span class="title">Dashboard</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="customer.html">
+                        <span class="icon">
+                            <ion-icon name="people-outline"></ion-icon>
+                        </span>
+                        <span class="title">Customers</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="tracking.html">
+                        <span class="icon">
+                            <ion-icon name="navigate-outline"></ion-icon>
+                        </span>
+                        <span class="title">Tracking</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="messages.html">
+                        <span class="icon">
+                            <ion-icon name="chatbubble-outline"></ion-icon>
+                        </span>
+                        <span class="title">Messages</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="help.html">
+                        <span class="icon">
+                            <ion-icon name="help-outline"></ion-icon>
+                        </span>
+                        <span class="title">Help</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="settings.html">
+                        <span class="icon">
+                            <ion-icon name="settings-outline"></ion-icon>
+                        </span>
+                        <span class="title">Settings</span>
+                    </a>
+                </li>
+
+
+                <li>
+                    <a href="#" id="signOutBtn">
+                        <span class="icon">
+                            <ion-icon name="log-out-outline"></ion-icon>
+                        </span>
+                        <span class="title">Sign Out</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- ========================= Main ==================== -->
+        <div class="main">
+            <div class="topbar">
+                <div class="toggle">
+                    <ion-icon name="menu-outline"></ion-icon>
+                </div>
+
+                <div class="search">
+                    <label>
+                        <input type="text" placeholder="Search here">
+                        <ion-icon name="search-outline"></ion-icon>
+                    </label>
+                </div>
+
+                <div class="user">
+                    <img src="assets/imgs/customer01.jpg" alt="" id="riderAvatar">
+                </div>
+            </div>
+
+            <!-- ======================= Cards ================== --> 
+            <div class="cardBox">
+                <!-- Status Toggle Card -->
+                <div class="card" style="grid-column: span 4; background: linear-gradient(135deg,#5C8374  20%, #3b8986 100%); color: white;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                        <div>
+                            <div class="cardName" style="color: rgba(255,255,255,0.9); font-size: 0.9rem;">Current Status</div>
+                            <div style="font-size: 1.8rem; font-weight: bold; margin: 8px 0;" id="current-status-text">Loading...</div>
+                            <div style="font-size: 0.85rem; opacity: 0.9;" id="work-schedule-text">Schedule: --:-- to --:--</div>
+                        </div>
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                            <button class="status-btn status-available" data-status="available" title="Ready to receive orders">
+                                <i class="fas fa-check-circle"></i> Available
+                            </button>
+                            <button class="status-btn status-busy" data-status="busy" title="Currently delivering" disabled>
+                                <i class="fas fa-shipping-fast"></i> Busy
+                            </button>
+                            <button class="status-btn status-break" data-status="on_break" title="Taking a break">
+                                <i class="fas fa-coffee"></i> On Break
+                            </button>
+                            <button class="status-btn status-offline" data-status="offline" title="Not accepting orders">
+                                <i class="fas fa-times-circle"></i> Offline
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div>
+                        <div class="numbers" id="totalDeliveries">0</div>
+                        <div class="cardName">Total Delivery</div>
+                    </div>
+
+                    <div class="iconBx">
+                        <ion-icon name="fast-food-outline"></ion-icon>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div>
+                        <div class="numbers" id="successfulDeliveries">0</div>
+                        <div class="cardName">Successful Deliveries</div>
+                    </div>
+
+                    <div class="iconBx">
+                        <ion-icon name="bicycle-outline"></ion-icon>
+                        
+                    </div>
+                </div>
+
+
+                <div class="card">
+                    <div>
+                        <div class="numbers" id="cancelledDeliveries">0</div>
+                        <div class="cardName">Cancelled Delivery</div>
+                    </div>
+
+                    <div class="iconBx">
+                        <ion-icon name="hourglass-outline"></ion-icon>
+                    </div>
+                </div>
+ 
+                <div class="card">
+                    <div>
+                        <div class="numbers" id="totalEarnings">৳0</div>
+                        <div class="cardName">Total Earnings</div>
+                    </div>
+
+                    <div class="iconBx">
+                        <ion-icon name="cash-outline"></ion-icon>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================ Order Details List ================= -->
+            <div class="details">
+                <!-- ================ ACTIVE DELIVERIES SECTION ================= -->
+                <div id="activeDeliveriesSection" class="recentOrders" style="display: none; margin-bottom: 20px; border: 2px solid #f39c12; box-shadow: 0 4px 12px rgba(243, 156, 18, 0.2);">
+                    <div class="cardHeader" style="background: linear-gradient(135deg, #5C8374 0%, #3F8883 100%); color: white; padding: 15px; border-radius: 8px 8px 0 0;">
+                        <h2 style="color: white; display: flex; align-items: center; gap: 10px;">
+                            <ion-icon name="bicycle-outline" style="font-size: 1.5rem;"></ion-icon>
+                            Active Deliveries
+                            <span id="activeDeliveryCount" style="background: white; color: #f39c12; padding: 2px 10px; border-radius: 12px; font-size: 0.9rem; font-weight: bold;">0</span>
+                        </h2>
+                    </div>
+
+                    <div id="activeDeliveriesContainer" style="padding: 20px;">
+                        <!-- Active deliveries will be loaded here -->
+                    </div>
+                </div>
+
+                <div class="recentOrders">
+                    <div class="cardHeader">
+                        <h2>Recent Orders</h2>
+                        <a href="#" class="btn">View All</a>
+                    </div>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>Order & Restaurant</td>
+                                <td>Amount & Items</td>
+                                <td>Date & Time</td>
+                                <td>Payment</td>
+                                <td>Status</td>
+                            </tr>
+                        </thead>
+
+                        <tbody id="recentOrdersBody">
+                            <tr>
+                                <td colspan="5" style="text-align: center; padding: 20px;">Loading orders...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- ================= Recent Customers ================ -->
+                <div class="recentCustomers">
+                    <div class="cardHeader">
+                        <h2>Recent Customers</h2>
+                    </div>
+
+                    <table id="recentCustomersTable">
+                        <tr>
+                            <td colspan="2" style="text-align: center; padding: 20px;">Loading customers...</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rider Welcome / Setup Popup -->
+    <div id="welcome-popup" class="popup-overlay" style="display:none;">
+        <div class="popup-content">
+            
+            <!-- Step 0: Welcome -->
+            <div class="popup-screen active" id="welcome-screen">
+                <h2>🏍️ Welcome to <span class="highlight">Khadok Rider</span>!</h2>
+                <p>Let's set up your rider profile so you can start delivering orders.</p>
+                <button class="primary-btn" id="get-started-btn">Get Started</button>
+            </div>
+            
+            <!-- Step 1: Basic Info -->
+            <div class="popup-screen" id="step-1">
+                <h3>
+                    <i class="fa-solid fa-user fa-bounce" style="color: #00b894;"></i>
+                    Personal Information
+                </h3>
+                <label>Full Name:
+                    <input type="text" id="rider-name" placeholder="Enter your full name" required />
+                </label>
+                <label>Contact Number:
+                    <input type="tel" id="rider-number" placeholder="+8801XXXXXXXXX" required />
+                </label>
+                <label>Profile Picture (optional):
+                    <input type="file" id="rider-pic" accept="image/*" />
+                </label>
+                <div class="button-group">
+                    <button class="secondary-btn" id="back-to-welcome">← Back</button>
+                    <button class="primary-btn" id="to-step-2">Next →</button>
+                </div>
+            </div>
+            
+            <!-- Step 2: Address & Location -->
+            <div class="popup-screen" id="step-2">
+                <h3>
+                    <i class="fa-solid fa-map-pin fa-bounce" style="color: #00b894;"></i>
+                    Your Address
+                </h3>
+                <label>Address:</label>
+                <div class="location-input-wrapper">
+                    <input type="text" id="location-input" placeholder="Search address..." autocomplete="off" />
+                    <ul id="location-suggestions" class="location-suggestions hidden"></ul>
+                    <button id="locate-me-btn" class="locate-me-btn" title="Use my current location">
+                        📍
+                    </button>
+                </div>
+                <div id="map-container"></div>
+                <div class="button-group">
+                    <button class="secondary-btn" id="back-to-step-1">← Back</button>
+                    <button class="primary-btn" id="to-step-3">Next →</button>
+                </div>
+            </div>
+            
+            <!-- Step 3: Vehicle Details -->
+            <div class="popup-screen" id="step-3">
+                <h3>
+                    <i class="fa-solid fa-motorcycle fa-bounce" style="color: #00b894;"></i>
+                    Vehicle Information
+                </h3>
+                <label>Vehicle Type:
+                    <select id="vehicle-type" required>
+                        <option value="">Select vehicle type</option>
+                        <option value="bicycle">Bicycle</option>
+                        <option value="motorcycle">Motorcycle</option>
+                        <option value="car">Car</option>
+                    </select>
+                </label>
+                <label>Vehicle Number (optional):
+                    <input type="text" id="vehicle-number" placeholder="e.g., DHK-METRO-123456" />
+                </label>
+                <div class="button-group">
+                    <button class="secondary-btn" id="back-to-step-2">← Back</button>
+                    <button class="primary-btn" id="to-step-4">Next →</button>
+                </div>
+            </div>
+            
+            <!-- Step 4: Work Schedule -->
+            <div class="popup-screen" id="step-4">
+                <h3>
+                    <i class="fa-solid fa-clock fa-bounce" style="color: #00b894;"></i>
+                    Work Schedule
+                </h3>
+                <p style="font-size: 0.9rem; color: #666; margin-bottom: 15px;">
+                    Set your daily working hours. You can change this anytime in settings.
+                </p>
+                <label>Start Time:
+                    <input type="time" id="work-start-time" value="09:00" required />
+                </label>
+                <label>End Time:
+                    <input type="time" id="work-end-time" value="21:00" required />
+                </label>
+                <label>
+                    <input type="checkbox" id="available-now" checked style="width: auto; display: inline-block; margin-right: 8px;" />
+                    <span style="font-weight: normal;">Set me as <strong style="color: #00b894;">Available</strong> after setup</span>
+                </label>
+                <div style="background: #e8f5e9; padding: 12px; border-radius: 6px; margin-top: 15px; font-size: 0.85rem;">
+                    <strong>💡 Status Explained:</strong><br>
+                    • <strong style="color: #00b894;">Available</strong> - Ready to receive orders<br>
+                    • <strong style="color: #f39c12;">Busy</strong> - Currently delivering an order<br>
+                    • <strong style="color: #e74c3c;">Offline</strong> - Not accepting orders<br>
+                    • <strong style="color: #3498db;">On Break</strong> - Temporarily unavailable
+                </div>
+                <div class="button-group">
+                    <button class="secondary-btn" id="back-to-step-3">← Back</button>
+                    <button class="primary-btn" id="finish-setup">Start Riding! 🏍️</button>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- =========== Scripts =========  -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/dashboard.js"></script>
+
+    <!-- ====== ionicons ======= -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    
+    <!-- Rider First-Time Setup Script -->
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+            const riderId = localStorage.getItem("rider_id");
+            if (!riderId) {
+                console.error("No rider_id in localStorage");
+                return;
+            }
+
+            // Check if first-time user
+            let isFirst = false;
+            try {
+                const resp = await fetch(`/api/rider/first-time?rider_id=${riderId}`);
+                const json = await resp.json();
+                isFirst = resp.ok && (json.firstTime === true || json.firstTime === "true");
+            } catch (e) {
+                console.error("First-time check failed:", e);
+            }
+            
+            if (!isFirst) return; // Returning user
+
+            // Show popup
+            const popup = document.getElementById("welcome-popup");
+            const screens = {
+                welcome: document.getElementById("welcome-screen"),
+                step1: document.getElementById("step-1"),
+                step2: document.getElementById("step-2"),
+                step3: document.getElementById("step-3"),
+                step4: document.getElementById("step-4"),
+            };
+            
+            function showScreen(el) {
+                Object.values(screens).forEach(s => s.classList.remove("active"));
+                el.classList.add("active");
+            }
+
+            popup.style.display = "flex";
+            showScreen(screens.welcome);
+
+            // Navigation buttons
+            document.getElementById("get-started-btn").onclick = () => showScreen(screens.step1);
+            document.getElementById("back-to-welcome").onclick = () => showScreen(screens.welcome);
+            document.getElementById("to-step-2").onclick = () => {
+                const name = document.getElementById("rider-name").value.trim();
+                const number = document.getElementById("rider-number").value.trim();
+                if (!name || !number) {
+                    alert("Please fill in all required fields");
+                    return;
+                }
+                showScreen(screens.step2);
+                setTimeout(() => map && map.invalidateSize(), 100);
+            };
+            document.getElementById("back-to-step-1").onclick = () => showScreen(screens.step1);
+            document.getElementById("to-step-3").onclick = () => showScreen(screens.step3);
+            document.getElementById("back-to-step-2").onclick = () => showScreen(screens.step2);
+            document.getElementById("to-step-4").onclick = () => showScreen(screens.step4);
+            document.getElementById("back-to-step-3").onclick = () => showScreen(screens.step3);
+
+            // Map & Geocoding
+            let map, tileURL;
+            const locationInput = document.getElementById("location-input");
+            const suggestionsList = document.getElementById("location-suggestions");
+            const locateBtn = document.getElementById("locate-me-btn");
+
+            // Load tile URL
+            (async () => {
+                try {
+                    const resp = await fetch("/api/map/tile-url");
+                    const json = await resp.json();
+                    tileURL = json.tileURL;
+                } catch (err) {
+                    console.error("Failed to fetch tile URL:", err);
+                }
+            })();
+
+            // Reverse geocode
+            async function reverseGeocode(lat, lon) {
+                const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=16`;
+                try {
+                    const resp = await fetch(url);
+                    const data = await resp.json();
+                    return data.display_name || "";
+                } catch {
+                    return "";
+                }
+            }
+
+            // Update input when map moves
+            async function updateInputWithCenter() {
+                if (!map) return;
+                const c = map.getCenter();
+                locationInput.value = await reverseGeocode(c.lat, c.lng);
+            }
+
+            // Locate me button
+            locateBtn.addEventListener("click", () => {
+                if (!navigator.geolocation) return alert("Geolocation not supported.");
+                navigator.geolocation.getCurrentPosition(async ({ coords }) => {
+                    const { latitude, longitude } = coords;
+                    if (!map) {
+                        map = L.map("map-container", { zoomControl: true, scrollWheelZoom: false })
+                            .setView([latitude, longitude], 16);
+                        L.tileLayer(tileURL, {
+                            tileSize: 512,
+                            zoomOffset: -1,
+                            attribution: '© MapTiler © OSM'
+                        }).addTo(map);
+                        map.on("moveend zoomend", updateInputWithCenter);
+                    } else {
+                        map.setView([latitude, longitude], 16);
+                    }
+                    locationInput.value = await reverseGeocode(latitude, longitude);
+                }, () => alert("Please allow location access."));
+            });
+
+            // Autocomplete
+            let debounceTimeout;
+            locationInput.addEventListener("input", () => {
+                const q = locationInput.value.trim();
+                clearTimeout(debounceTimeout);
+                if (!q) {
+                    suggestionsList.innerHTML = "";
+                    suggestionsList.classList.add("hidden");
+                    return;
+                }
+                debounceTimeout = setTimeout(async () => {
+                    const url = `https://nominatim.openstreetmap.org/search?format=json&limit=5&countrycodes=bd&q=${encodeURIComponent(q)}`;
+                    try {
+                        const resp = await fetch(url);
+                        const data = await resp.json();
+                        suggestionsList.innerHTML = data.length
+                            ? data.map(p => `<li data-lat="${p.lat}" data-lon="${p.lon}">${p.display_name}</li>`).join("")
+                            : `<li>No results found</li>`;
+                        suggestionsList.classList.remove("hidden");
+                    } catch (err) {
+                        console.error(err);
+                    }
+                }, 300);
+            });
+
+            // Select suggestion
+            suggestionsList.addEventListener("click", e => {
+                if (e.target.tagName !== "LI") return;
+                const lat = +e.target.dataset.lat;
+                const lon = +e.target.dataset.lon;
+                const name = e.target.textContent;
+                if (!map) {
+                    map = L.map("map-container", { zoomControl: true, scrollWheelZoom: false })
+                        .setView([lat, lon], 16);
+                    L.tileLayer(tileURL, {
+                        tileSize: 512,
+                        zoomOffset: -1,
+                        attribution: '© MapTiler © OSM'
+                    }).addTo(map);
+                    map.on("moveend zoomend", updateInputWithCenter);
+                } else {
+                    map.setView([lat, lon], 16);
+                }
+                locationInput.value = name;
+                suggestionsList.innerHTML = "";
+                suggestionsList.classList.add("hidden");
+            });
+
+            // Hide suggestions on outside click
+            document.addEventListener("click", e => {
+                if (!suggestionsList.contains(e.target) && e.target !== locationInput) {
+                    suggestionsList.innerHTML = "";
+                    suggestionsList.classList.add("hidden");
+                }
+            });
+
+            // Finish setup
+            document.getElementById("finish-setup").onclick = async () => {
+                const name = document.getElementById("rider-name").value.trim();
+                const number = document.getElementById("rider-number").value.trim();
+                const address = locationInput.value.trim();
+                const vehicleType = document.getElementById("vehicle-type").value;
+                const vehicleNumber = document.getElementById("vehicle-number").value.trim();
+                const picFile = document.getElementById("rider-pic").files[0];
+                const startTime = document.getElementById("work-start-time").value;
+                const endTime = document.getElementById("work-end-time").value;
+                const availableNow = document.getElementById("available-now").checked;
+
+                if (!name || !number || !address || !vehicleType || !startTime || !endTime) {
+                    return alert("Please complete all required fields.");
+                }
+
+                // Get map center
+                let lat = "", lng = "";
+                if (map) {
+                    const c = map.getCenter();
+                    lat = c.lat.toFixed(6);
+                    lng = c.lng.toFixed(6);
+                }
+
+                // Build FormData
+                const formData = new FormData();
+                formData.append("rider_id", riderId);
+                formData.append("name", name);
+                formData.append("number", number);
+                formData.append("address", address);
+                formData.append("vehicle_type", vehicleType);
+                formData.append("vehicle_number", vehicleNumber);
+                formData.append("lat", lat);
+                formData.append("lng", lng);
+                formData.append("start_time", startTime);
+                formData.append("end_time", endTime);
+                formData.append("available_now", availableNow);
+                if (picFile) formData.append("profile_pic", picFile);
+
+                // Send to backend
+                try {
+                    const res = await fetch("/api/rider/update-info", {
+                        method: "POST",
+                        body: formData
+                    });
+                    const data = await res.json();
+                    if (res.ok) {
+                        alert("🎉 Setup complete — welcome aboard!");
+                        popup.style.display = "none";
+                        location.reload(); // Reload to show updated dashboard
+                    } else {
+                        alert("Error saving info: " + (data.message || data.error));
+                    }
+                } catch (err) {
+                    console.error("Submit failed:", err);
+                    alert("Something went wrong. Please try again.");
+                }
+            };
+        });
+    </script>
+</body>
+
+</html>
