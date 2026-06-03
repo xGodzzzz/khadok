@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Restaurant Menu | Khadok</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <!-- Font Awesome & Boxicons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+
+    <!-- Leaflet CSS for Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="css/khadok.consumer.sidebar.css">
+    <link rel="stylesheet" href="css/consumer-menu.css" />
+</head>
+
+<body>
+    <!-- Consumer Sidebar -->
+    <div class="sidebar">
+        <div class="logo_content">
+            <div class="logo">
+                <div class="logo_name">Khadok</div>
+            </div>
+            <i class='bx bx-menu' id="btn"></i>
+        </div>
+        <ul class="nav_list">
+            <li>
+                <i class='bx bx-search-alt'></i>
+                <input type="text" placeholder="Search...">
+                <span class="tooltip">Search</span>
+            </li>
+            <li>
+                <a href="khadok.consumer.dashboard.html">
+                    <i class='bx bxs-grid-alt'></i>
+                    <span class="links_name">Dashboard</span>
+                </a>
+                <span class="tooltip">Dashboard</span>
+            </li>
+            <li>
+                <a href="khadok.consumer.user.html">
+                    <i class='bx bxs-user-circle'></i>
+                    <span class="links_name">User</span>
+                </a>
+                <span class="tooltip">User</span>
+            </li>
+            <li>
+                <a href="map.html">
+                    <i class='bx bx-navigation'></i>
+                    <span class="links_name">Map</span>
+                </a>
+                <span class="tooltip">Map</span>
+            </li>
+            <li>
+                <a href="khadok.consumer.order.html">
+                    <i class='bx bxs-package'></i>
+                    <span class="links_name">Orders</span>
+                </a>
+                <span class="tooltip">Orders</span>
+            </li>
+            <li>
+                <a href="khadok.consumer.reservation.html" class="active">
+                    <i class='bx bxs-calendar-check'></i>
+                    <span class="links_name">Reservations</span>
+                </a>
+                <span class="tooltip">Reservations</span>
+            </li>
+            <li>
+                <a href="khadok.consumer.cart.html">
+                  <i class='bx bxs-cart'></i>
+                  <span class="links_name">Cart</span>
+                </a>
+                <span class="tooltip">Cart</span>
+              </li>
+            <li>
+                <a href="khadok.consumer.setting.html">
+                    <i class='bx bxs-cog'></i>
+                    <span class="links_name">Settings</span>
+                </a>
+                <span class="tooltip">Settings</span>
+            </li>
+        </ul>
+        <div class="profile_content">
+            <div class="profile">
+                <div class="profile_details">
+                    <div class="name_job">
+                        <div class="name">Logout</div>
+                        <div class="job">Consumer</div>
+                    </div>
+                </div>
+                <button id="logoutButton" class="logout_button" onclick="logout()">
+                    <i class='bx bx-log-out-circle' id="log_out"></i>
+                    <span class="links_name">Logout</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header / Breadcrumbs -->
+        <div class="page-header">
+            <div class="breadcrumbs">
+                <span><a href="khadok.consumer.dashboard.html">Dashboard</a></span> &gt;
+                <span id="restaurant-breadcrumb">Loading...</span>
+            </div>
+            <h1 id="restaurant-name">Loading Restaurant...</h1>
+            <p style="color: #666; margin-top: 0.5rem; font-size: 1rem;">
+                <i class="fas fa-utensils"></i> Menu for Delivery
+            </p>
+        </div>
+
+        <!-- Sorting & Search -->
+        <div class="controls">
+            <div class="search-wrapper">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="searchInput" placeholder="Search menu items..." />
+
+                <!-- Live search results -->
+                <div id="searchResults" class="search-results" style="display: none;"></div>
+            </div>
+
+            <div class="sort-wrapper">
+                <i class="fas fa-sort-amount-down-alt sort-icon"></i>
+                <select id="sortSelect">
+                    <option value="default">Sort By</option>
+                    <option value="priceLow">Price: Low to High</option>
+                    <option value="priceHigh">Price: High to Low</option>
+                    <option value="alphaAZ">Alphabetical (A–Z)</option>
+                    <option value="alphaZA">Alphabetical (Z–A)</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Category Tabs with Scroll Buttons -->
+        <div class="tabs-container">
+            <div class="tabs-scroll-wrapper">
+                <button id="scrollLeft" class="scroll-btn" aria-label="Scroll left">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+
+                <div class="scrollable-tabs">
+                    <div class="tabs" id="categoryTabs">
+                        <!-- JS will inject category tabs here -->
+                    </div>
+                </div>
+
+                <button id="scrollRight" class="scroll-btn" aria-label="Scroll right">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Menu Sections -->
+        <div id="menuSections">
+            <!-- dynamically injected -->
+        </div>
+    </div>
+
+    <!-- Cart icon and popup -->
+    <div class="cart-icon" id="cart-icon">
+        <i class="fas fa-shopping-cart"></i>
+        <span id="cart-count">0</span>
+    </div>
+    
+    <div class="cart-popup" id="cart-popup">
+        <!-- Order Type Toggle -->
+        <div class="order-type-tabs">
+            <button id="delivery-tab" class="order-type-tab active">
+                Delivery
+            </button>
+            <button id="pickup-tab" class="order-type-tab">Pick-up</button>
+        </div>
+
+        <h3>Your items</h3>
+        
+        <!-- Cart Items -->
+        <div id="cart-items"></div>
+
+        <!-- Cart Summary -->
+        <div id="cart-summary" class="cart-summary">
+            <div class="summary-row">
+                <span>Subtotal</span>
+                <span id="subtotal-amount">Tk 0</span>
+            </div>
+            <div class="summary-row">
+                <span>Standard delivery</span>
+                <span id="delivery-fee-amount">Tk 24</span>
+            </div>
+            <div class="summary-row">
+                <span>Service fee <i class="fas fa-info-circle"></i></span>
+                <span id="service-fee-amount">Tk 4</span>
+            </div>
+            <div class="summary-row total-row">
+                <span>Total (incl. fees and tax)</span>
+                <span id="total-amount">Tk 0</span>
+            </div>
+        </div>
+
+        <!-- Checkout Button -->
+        <div class="cart-footer">
+            <button id="checkout-btn" class="checkout-btn">Review payment and address</button>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="payment-modal" id="payment-modal" style="display: none;">
+        <div class="payment-modal-content">
+            <div class="payment-modal-header">
+                <h2>Complete Your Order</h2>
+                <button class="close-modal" id="close-payment-modal">&times;</button>
+            </div>
+
+            <div class="payment-modal-body">
+                <!-- Order Summary -->
+                <div class="order-summary-section">
+                    <h3>Order Summary</h3>
+                    <div id="order-items-list"></div>
+                    <div class="order-totals">
+                        <div class="total-row">
+                            <span>Subtotal</span>
+                            <span id="modal-subtotal">Tk 0</span>
+                        </div>
+                        <div class="total-row" id="modal-delivery-row">
+                            <span>Delivery Fee</span>
+                            <span id="modal-delivery-fee">Tk 0</span>
+                        </div>
+                        <div class="total-row">
+                            <span>Service Fee</span>
+                            <span id="modal-service-fee">Tk 5</span>
+                        </div>
+                        <div class="total-row total-amount-row">
+                            <span><strong>Total Amount</strong></span>
+                            <span id="modal-total"><strong>Tk 0</strong></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Delivery Address (only for delivery) -->
+                <div class="delivery-address-section" id="delivery-address-section" style="display: none;">
+                    <h3>Delivery Location</h3>
+                    
+                    <!-- Map Preview Container -->
+                    <div class="delivery-map-container" id="delivery-map-container" style="
+                        height: 250px; 
+                        width: 100%; 
+                        border-radius: 12px; 
+                        overflow: hidden; 
+                        border: 2px solid #e0e0e0;
+                        margin-bottom: 1rem;
+                        position: relative;
+                    ">
+                        <!-- Map will be rendered here -->
+                    </div>
+                    
+                    <!-- Address Display (Read-only) -->
+                    <div style="
+                        background: #f8f9fa;
+                        border: 2px solid #e0e0e0;
+                        border-radius: 8px;
+                        padding: 1rem;
+                        margin-bottom: 0.5rem;
+                    ">
+                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                            <i class="fas fa-map-marker-alt" style="color: #00b894;"></i>
+                            <strong style="color: #333;">Delivery Address</strong>
+                        </div>
+                        <p id="delivery-address-display" style="
+                            margin: 0;
+                            color: #666;
+                            font-size: 0.95rem;
+                            line-height: 1.5;
+                        ">Loading address...</p>
+                    </div>
+                    
+                    <p style="
+                        font-size: 0.85rem;
+                        color: #999;
+                        margin: 0.5rem 0 0;
+                        display: flex;
+                        align-items: center;
+                        gap: 0.5rem;
+                    ">
+                        <i class="fas fa-info-circle"></i>
+                        This is your saved location. To change it, go to Dashboard → Location Picker.
+                    </p>
+                </div>
+
+                <!-- Pickup Time (only for pickup) -->
+                <div class="pickup-time-section" id="pickup-time-section" style="display: none;">
+                    <h3>Pickup Time</h3>
+                    <input type="datetime-local" id="pickup-time" />
+                </div>
+
+                <!-- Payment Method Selection -->
+                <div class="payment-method-section">
+                    <h3>Payment Method</h3>
+                    
+                    <!-- Cash on Delivery (only for delivery) -->
+                    <div class="payment-option" id="cash-option" style="display: none;">
+                        <input type="radio" id="payment-cash" name="payment-method" value="cash" />
+                        <label for="payment-cash">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <span>Cash on Delivery</span>
+                        </label>
+                    </div>
+
+                    <!-- bKash Payment -->
+                    <div class="payment-option">
+                        <input type="radio" id="payment-bkash" name="payment-method" value="bkash" checked />
+                        <label for="payment-bkash">
+                            <i class="fas fa-mobile-alt"></i>
+                            <span>bKash Payment</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Order Notes -->
+                <div class="order-notes-section">
+                    <h3>Special Instructions (Optional)</h3>
+                    <textarea id="order-notes" placeholder="Add any special requests..." rows="2"></textarea>
+                </div>
+            </div>
+
+            <div class="payment-modal-footer">
+                <button class="btn-cancel" id="cancel-payment">Cancel</button>
+                <button class="btn-confirm" id="confirm-payment">
+                    <i class="fas fa-lock"></i> Place Order
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let btn = document.querySelector("#btn");
+        let sidebar = document.querySelector(".sidebar");
+        let searchBtn = document.querySelector(".bx-search-alt");
+
+        btn.onclick = function () {
+            sidebar.classList.toggle("active");
+        }
+        searchBtn.onclick = function () {
+            sidebar.classList.toggle("active");
+        }
+    </script>
+
+    <script>
+        async function logout() {
+            const sessionId = localStorage.getItem("sessionId");
+
+            if (!sessionId) {
+                alert("No session found.");
+                return;
+            }
+
+            try {
+                const res = await fetch("/api/auth/logout", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ sessionId }),
+                    credentials: "include",
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    localStorage.removeItem("sessionId");
+                    localStorage.removeItem("consumer_id");
+                    alert(data.message);
+                    window.location.href = '../login.html';
+                } else {
+                    alert(data.message || "Logout failed.");
+                    window.location.href = '../login.html';
+                }
+            } catch (err) {
+                console.error("Logout error:", err);
+                alert("Something went wrong.");
+                window.location.href = '../login.html';
+            }
+        }
+    </script>
+
+    <script>
+        (function checkAuthOnLoad() {
+            const sessionId = localStorage.getItem("sessionId");
+            if (!sessionId) {
+                window.location.replace("../login.html");
+            }
+        })();
+    </script>
+
+    <!-- Consumer Menu JS -->
+    <script src="js/consumer-menu.js"></script>
+
+    <!-- Leaflet JS for Map -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+
+    <script>
+        async function logout() {
+            const sessionId = localStorage.getItem("sessionId");
+    
+            if (!sessionId) {
+                alert("No session found.");
+                return;
+            }
+    
+            try {
+                const res = await fetch("/api/auth/logout", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ sessionId }),
+                    credentials: "include", // Include the session cookie in the request
+                });
+    
+                const data = await res.json();
+    
+                if (res.ok) {
+                    localStorage.removeItem("sessionId"); // Clear sessionId from localStorage after logout
+                    alert(data.message); // Show success message
+                    window.location.href = '../login.html';
+                } else {
+                    alert(data.message || "Logout failed.");
+                    window.location.href = '../login.html'; // Redirect to login page on error
+                }
+            } catch (err) {
+                console.error("Logout error:", err);
+                alert("Something went wrong.");
+                window.location.href = '../login.html'; // Redirect to login page on error
+            }
+        }
+    
+        const logoutButton = document.getElementById("logoutButton");
+        logoutButton.addEventListener("click", logout);
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,1912 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>dashoard</title>
+  <link rel="stylesheet" href="css/khadok.consumer.sidebar.css">
+  <link rel="stylesheet" href="css/khadok.consumer.dashboard.css">\
+  <link rel="stylesheet" href="css/delivery-notification.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-A7vV8IFfih/D732iSSl2gBj5b0hyYLtP7kD+3h7gUGI=" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-DqmMyN4G2E/J04hWmKZulrVdY0lAM8Q+vHdUqax0DA0=" crossorigin=""></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    integrity="sha512-yadaYADA..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+  <script src="https://kit.fontawesome.com/a2d9d6a1f3.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+  <!-- Socket.IO for real-time order tracking -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="js/app.js"></script>
+
+
+</head>
+
+<body>
+
+  <div class="sidebar">
+    <div class="logo_content">
+      <div class="logo">
+
+        <div class="logo_name">Khadok
+
+        </div>
+      </div>
+      <i class='bx bx-menu' id="btn"></i>
+    </div>
+    <ul class="nav_list">
+      <li>
+
+        <i class='bx bx-search-alt'></i>
+        <input type="text" placeholder="Search...">
+
+        <span class="tooltip">Search </span>
+      </li>
+      <li>
+        <a href="khadok.consumer.dashboard.html">
+          <i class='bx bxs-grid-alt'></i>
+          <span class="links_name">Dashboard</span>
+        </a>
+        <span class="tooltip">Dashboard</span>
+      </li>
+      <li>
+        <a href="khadok.consumer.user.html">
+          <i class='bx bxs-user-circle'></i>
+          <span class="links_name">User</span>
+        </a>
+        <span class="tooltip">User</span>
+      </li>
+      <li>
+        <a href="map.html">
+          <i class='bx bx-navigation'></i>
+          <span class="links_name">Map</span>
+        </a>
+        <span class="tooltip">Map</span>
+      </li>
+
+      <li>
+        <a href="khadok.consumer.order.html">
+          <i class='bx bxs-package'></i>
+          <span class="links_name">Orders</span>
+        </a>
+        <span class="tooltip">Orders</span>
+      </li>
+
+      <li>
+        <a href="khadok.consumer.reservation.html">
+          <i class='bx bxs-calendar-check'></i>
+          <span class="links_name">Reservations</span>
+        </a>
+        <span class="tooltip">Reservations</span>
+      </li>
+
+      <li>
+        <a href="khadok.consumer.cart.html">
+          <i class='bx bxs-cart'></i>
+          <span class="links_name">Cart</span>
+        </a>
+        <span class="tooltip">Cart</span>
+      </li>
+
+      <li>
+        <a href="khadok.consumer.setting.html">
+          <i class='bx bxs-cog'></i>
+          <span class="links_name">Settings</span>
+        </a>
+        <span class="tooltip">Settings</span>
+      </li>
+    </ul>
+    <div class="profile_content">
+      <div class="profile">
+        <div class="profile_details">
+          <div class="name_job">
+            <div class="name">Logout</div>
+            <div class="job">Consumer</div>
+          </div>
+        </div>
+        <button id="logoutButton" class="logout_button" onclick="logout()">
+          <i class='bx bx-log-out-circle' id="log_out"></i>
+          <span class="links_name">Logout</span>
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="home_content">
+    <div class="dashboard-container">
+      <div class="user-info">
+        <p hidden id="userEmail">Fetching user info...</p>
+      </div>
+
+      <!-- Top Navigation Bar -->
+      <nav class="navbar">
+        <div class="nav-left">
+          <img src="images/khadok2.png" alt="Khadok Logo" class="logo" /><!-- Logo Image -->
+
+        </div>
+
+        <div class="nav-center">
+          <div class="location" id="open-location-btn" role="button" title="Open location picker">
+            <i class="fas fa-map-marker-alt"></i>
+            <span id="location-name">New Address N1, Dhaka</span>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+        </div>
+
+
+
+      </nav>
+
+      <!-- Hero Section -->
+      <section class="hero">
+        <div class="hero-content">
+          <h1>Find your favourite meals near you</h1>
+          <p>Delicious food from top restaurants, delivered fresh and fast</p>
+
+          <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Search for restaurants in your area" id="search" autocomplete="off" />
+            <button class="search-btn">Search</button>
+            <!-- Autocomplete suggestions dropdown -->
+            <ul id="search-suggestions" class="search-suggestions hidden"></ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Main Content -->
+      <main class="main-container">
+        <div class="service-buttons">
+          <button class="active">
+            <i class="fas fa-motorcycle"></i> Delivery
+          </button>
+          <button>
+            <i class="fas fa-shopping-bag"></i> Pickup
+          </button>
+          <button>
+            <i class="fas fa-utensils"></i> Dine-in
+          </button>
+        </div>
+        <!-- Cuisine Categories -->
+        <section class="cuisine-section">
+          <h2>Your Favourite Cuisines</h2>
+          <div class="cuisine-list">
+            <div class="cuisine-card">🍕 Pizza</div>
+            <div class="cuisine-card">🍔 Burgers</div>
+            <div class="cuisine-card">🍛 Biryani</div>
+            <div class="cuisine-card">🍜 Noodles</div>
+            <div class="cuisine-card">🍣 Sushi</div>
+            <div class="cuisine-card">🍰 Cakes</div>
+            <div class="cuisine-card">☕ Coffee</div>
+          </div>
+        </section>
+
+        <!-- Filter + Sort -->
+        <div class="filter-bar">
+          <div class="sort-options">
+            <label>Sort by:</label>
+            <button class="active">Relevance</button>
+            <button>Top Rated</button>
+            <button>Distance</button>
+            <button>Fastest</button>
+          </div>
+          <button class="filter-btn" id="open-filter-panel">
+            <i class="fas fa-sliders-h"></i> Filters
+          </button>
+        </div>
+
+        
+
+        <!-- Restaurants Grid -->
+        <section class="restaurant-grid" id="restaurant-container">
+          <div class="loading">Loading delicious options...</div>
+        </section>
+
+        <!-- View Restaurants in Map Section -->
+        <section class="map-view-section">
+          <h2><i class="fas fa-map-marked-alt"></i> View Restaurants in Map</h2>
+          <div id="restaurants-map-container" style="height: 500px; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1);"></div>
+        </section>
+
+        
+
+        
+      </main>
+
+      <!-- Welcome / Setup Popup -->
+      <div id="welcome-popup" class="popup-overlay" style="display:none;">
+        <div class="popup-content">
+          <!-- Step 0: Welcome -->
+          <div class="popup-screen" id="welcome-screen">
+            <h2>👋 Welcome to <span class="highlight">Khadok</span>!</h2>
+            <p>We’re excited to have you on board. Let’s set up your profile.</p>
+            <button class="primary-btn" id="get-started-btn">Get Started</button>
+          </div>
+
+          <!-- Step 1: Basic Info -->
+          <div class="popup-screen" id="step-1">
+            <h3>
+              <i class="fa-solid fa-user fa-bounce" style="color: #63E6BE;"></i>
+              Your Basic Info
+            </h3>
+
+            <label>Full Name:
+              <input type="text" id="consumer-name" placeholder="Enter your full name" required />
+            </label>
+
+            <label>Mobile Number:
+              <input type="tel" id="consumer-number" placeholder="+8801XXXXXXXXX" required />
+            </label>
+
+            <div class="button-group">
+              <button class="secondary-btn" id="back-to-welcome">← Back</button>
+              <button class="primary-btn" id="to-step-2">Next →</button>
+            </div>
+          </div>
+
+          <!-- Step 2: Location -->
+          <div class="popup-screen" id="step-2">
+            <h3>
+              <i class="fa-solid fa-map-pin fa-bounce" style="color: #63E6BE;"></i>
+              Set Your Location
+            </h3>
+
+            <label>Address:</label>
+            <div class="location-input-wrapper">
+              <input type="text" id="location-input" placeholder="Search address..." autocomplete="off" />
+              <ul id="location-suggestions" class="location-suggestions hidden"></ul>
+
+              <!-- Locate Me button -->
+              <button id="locate-me-btn" class="locate-me-btn" title="Use my current location"
+                style="padding: 0; border: none; background: none;">
+                <img src="../images/location-icon.jpg" alt="Locate Me"
+                  style="width: 28px; height: 28px; object-fit: contain;" />
+              </button>
+
+              <button id="clear-location-btn" title="Clear" style="
+                      position: absolute;
+                      right: 50px;
+                      top: 5px;
+                      background: none;
+                      border: none;
+                      font-size: 16px;
+                      cursor: pointer;
+                    ">
+                ×
+              </button>
+            </div>
+
+            <div id="map-container" class="map-placeholder" style="height:300px; margin-top:10px;">
+              <!-- Fixed center-screen pin -->
+              <div id="map-center-marker" class="hidden" style="width: 14px; height: 14px;">
+                <i class="fa-solid fa-map-pin" style="color: #63E6BE;"></i>
+              </div>
+            </div>
+
+            <div class="button-group" style="margin-top:15px;">
+              <button class="secondary-btn" id="back-to-step-1">← Back</button>
+              <button class="primary-btn" id="to-step-3">Next →</button>
+            </div>
+          </div>
+
+          <!-- Step 3: Additional Info -->
+          <div class="popup-screen" id="step-3">
+            <h3>
+              <i class="fa-solid fa-circle-info fa-bounce" style="color: #63E6BE;"></i>
+              Additional Info
+            </h3>
+
+            <label>Gender:
+              <select id="consumer-gender">
+                <option value="" disabled selected>Select gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+            </label>
+
+            <label>Age:
+              <input type="number" id="consumer-age" placeholder="Enter your age" min="10" max="100" />
+            </label>
+
+            <label>Profile Picture (optional):
+              <input type="file" id="consumer-pic" accept="image/*" />
+            </label>
+
+            <div class="button-group">
+              <button class="secondary-btn" id="back-to-step-2">← Back</button>
+              <button class="primary-btn" id="finish-setup">Finish ✔</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Location Picker Modal (do not conflict with welcome popup) -->
+      <div id="location-modal" class="location-modal hidden" aria-hidden="true" role="dialog"
+        aria-label="Location picker">
+        <div class="location-modal-backdrop"></div>
+
+        <div class="location-modal-panel">
+          <header class="location-modal-header">
+            <div class="location-modal-title">
+              <i class="fas fa-map-marker-alt"></i>
+              <h3>Choose location</h3>
+            </div>
+            <button id="location-modal-close" class="btn-close" title="Close">&times;</button>
+          </header>
+
+          <div class="location-modal-body">
+            <div class="location-search-row">
+              <input id="location-input-modal" type="text" placeholder="Search address..." autocomplete="off" />
+              <button id="locate-me-btn-modal" class="btn-ghost" title="Use my current location">
+                <i class="fas fa-location-arrow"></i>
+              </button>
+              <button id="clear-location-btn-modal" class="btn-ghost" title="Clear search">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+            <ul id="location-suggestions-modal" class="location-suggestions hidden"></ul>
+
+            <div id="map-container-modal" class="map-container-modal">
+              <div id="map-center-marker" class="map-center-marker hidden"><i class="fas fa-map-pin"></i></div>
+              <div id="map-modal-inner" style="height:100%; width:100%;"></div>
+            </div>
+          </div>
+
+          <footer class="location-modal-footer">
+            <div class="location-modal-info">
+              <small id="selected-coords">Lat: — , Lng: —</small>
+              <small id="selected-address" style="margin-left:12px; color:#555;">Address preview</small>
+            </div>
+
+            <div class="location-modal-actions">
+              <button id="location-save-btn" class="btn-primary">Save location</button>
+              <button id="location-cancel-btn" class="btn-secondary">Cancel</button>
+            </div>
+          </footer>
+        </div>
+      </div>
+
+      <!-- Filter Panel -->
+      <div class="filter-overlay" id="filter-overlay"></div>
+      <div class="filter-panel" id="filter-panel">
+        <div class="filter-panel-header">
+          <h3><i class="fas fa-filter"></i> Filters</h3>
+          <button class="filter-close-btn" id="filter-close-btn">&times;</button>
+        </div>
+
+        <div class="filter-panel-body">
+          <!-- Offers Section -->
+          <div class="filter-section">
+            <h4 class="filter-section-title">Offers</h4>
+            <div class="checkbox-group">
+              <div class="checkbox-item">
+                <input type="checkbox" id="offer-free-delivery" value="free-delivery">
+                <label for="offer-free-delivery">Free Delivery</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="offer-vouchers" value="vouchers">
+                <label for="offer-vouchers">Accepts Vouchers</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="offer-deals" value="deals">
+                <label for="offer-deals">Deals</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cuisines Section -->
+          <div class="filter-section">
+            <h4 class="filter-section-title">Cuisines</h4>
+            <div class="cuisine-search-box">
+              <input type="text" id="cuisine-search" placeholder="Search for cuisines">
+              <i class="fas fa-search"></i>
+            </div>
+            <div class="checkbox-group cuisine-grid" id="cuisine-list">
+              <!-- Initial 10 cuisines -->
+              <div class="checkbox-item">
+                <input type="checkbox" id="cuisine-appetizer" value="Appetizer">
+                <label for="cuisine-appetizer">Appetizer</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="cuisine-asian" value="Asian">
+                <label for="cuisine-asian">Asian</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="cuisine-bakery" value="Bakery">
+                <label for="cuisine-bakery">Bakery</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="cuisine-bangladeshi" value="Bangladeshi">
+                <label for="cuisine-bangladeshi">Bangladeshi</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="cuisine-beverage" value="Beverage">
+                <label for="cuisine-beverage">Beverage</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="cuisine-biryani" value="Biryani">
+                <label for="cuisine-biryani">Biryani</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="cuisine-burgers" value="Burgers">
+                <label for="cuisine-burgers">Burgers</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="cuisine-cafe" value="Cafe">
+                <label for="cuisine-cafe">Cafe</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="cuisine-cakes" value="Cakes">
+                <label for="cuisine-cakes">Cakes</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="cuisine-chicken" value="Chicken">
+                <label for="cuisine-chicken">Chicken</label>
+              </div>
+
+              <!-- Hidden cuisines (show on "Show More") -->
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-chinese" value="Chinese">
+                <label for="cuisine-chinese">Chinese</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-chotpoti" value="Chotpoti & Fuchka">
+                <label for="cuisine-chotpoti">Chotpoti & Fuchka</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-chowmein" value="Chowmein">
+                <label for="cuisine-chowmein">Chowmein</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-combo" value="Combo">
+                <label for="cuisine-combo">Combo</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-curry" value="Curry">
+                <label for="cuisine-curry">Curry</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-dessert" value="Dessert">
+                <label for="cuisine-dessert">Dessert</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-drinks" value="Drinks">
+                <label for="cuisine-drinks">Drinks</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-dumpling" value="Dumpling">
+                <label for="cuisine-dumpling">Dumpling</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-fastfood" value="Fast Food">
+                <label for="cuisine-fastfood">Fast Food</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-fish" value="Fish">
+                <label for="cuisine-fish">Fish</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-friedchicken" value="Fried Chicken">
+                <label for="cuisine-friedchicken">Fried Chicken</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-grill" value="Grill">
+                <label for="cuisine-grill">Grill</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-indian" value="Indian">
+                <label for="cuisine-indian">Indian</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-italian" value="Italian">
+                <label for="cuisine-italian">Italian</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-japanese" value="Japanese">
+                <label for="cuisine-japanese">Japanese</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-juice" value="Juice Corner">
+                <label for="cuisine-juice">Juice Corner</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-kebab" value="Kebab">
+                <label for="cuisine-kebab">Kebab</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-korean" value="Korean">
+                <label for="cuisine-korean">Korean</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-meat" value="Meat">
+                <label for="cuisine-meat">Meat</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-mediterranean" value="Mediterranean">
+                <label for="cuisine-mediterranean">Mediterranean</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-middleeastern" value="Middle Eastern">
+                <label for="cuisine-middleeastern">Middle Eastern</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-momos" value="Momos">
+                <label for="cuisine-momos">Momos</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-nachos" value="Nachos">
+                <label for="cuisine-nachos">Nachos</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-noodles" value="Noodles">
+                <label for="cuisine-noodles">Noodles</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-pasta" value="Pasta">
+                <label for="cuisine-pasta">Pasta</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-pastry" value="Pastry">
+                <label for="cuisine-pastry">Pastry</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-pizza" value="Pizza">
+                <label for="cuisine-pizza">Pizza</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-platters" value="Platters">
+                <label for="cuisine-platters">Platters</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-puri" value="Puri">
+                <label for="cuisine-puri">Puri</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-ricebowl" value="Rice Bowl">
+                <label for="cuisine-ricebowl">Rice Bowl</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-ricedishes" value="Rice Dishes">
+                <label for="cuisine-ricedishes">Rice Dishes</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-rolls" value="Rolls">
+                <label for="cuisine-rolls">Rolls</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-salads" value="Salads">
+                <label for="cuisine-salads">Salads</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-sandwiches" value="Sandwiches">
+                <label for="cuisine-sandwiches">Sandwiches</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-seafood" value="Seafood">
+                <label for="cuisine-seafood">Seafood</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-setmenu" value="Set Menu">
+                <label for="cuisine-setmenu">Set Menu</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-shakes" value="Shakes">
+                <label for="cuisine-shakes">Shakes</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-shawarma" value="Shawarma">
+                <label for="cuisine-shawarma">Shawarma</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-sides" value="Sides">
+                <label for="cuisine-sides">Sides</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-signature" value="Signature Item">
+                <label for="cuisine-signature">Signature Item</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-snacks" value="Snacks">
+                <label for="cuisine-snacks">Snacks</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-soups" value="Soups">
+                <label for="cuisine-soups">Soups</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-sweets" value="Sweets">
+                <label for="cuisine-sweets">Sweets</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-taco" value="Taco">
+                <label for="cuisine-taco">Taco</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-thai" value="Thai">
+                <label for="cuisine-thai">Thai</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-turkish" value="Turkish">
+                <label for="cuisine-turkish">Turkish</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-vegetarian" value="Vegetarian">
+                <label for="cuisine-vegetarian">Vegetarian</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-western" value="Western">
+                <label for="cuisine-western">Western</label>
+              </div>
+              <div class="checkbox-item hidden">
+                <input type="checkbox" id="cuisine-wraps" value="Wraps">
+                <label for="cuisine-wraps">Wraps</label>
+              </div>
+            </div>
+            <button class="show-more-btn" id="show-more-cuisines">
+              Show More <i class="fas fa-chevron-down"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="filter-panel-footer">
+          <button class="filter-clear-btn" id="filter-clear-btn">Clear All</button>
+          <button class="filter-apply-btn" id="filter-apply-btn">Apply Filters</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Floating Cart Icon and Popup (from menu page) -->
+  <div class="cart-icon" id="cart-icon">
+    <i class="fas fa-shopping-cart"></i>
+    <span id="cart-count">0</span>
+  </div>
+  
+  <div class="cart-popup" id="cart-popup">
+    <!-- Order Type Toggle -->
+    <div class="order-type-tabs">
+      <button id="delivery-tab" class="order-type-tab active">
+        Delivery
+      </button>
+      <button id="pickup-tab" class="order-type-tab">Pick-up</button>
+    </div>
+
+    <h3>Your items</h3>
+    
+    <!-- Cart Items -->
+    <div id="cart-items"></div>
+
+    <!-- Cart Summary -->
+    <div id="cart-summary" class="cart-summary">
+      <div class="summary-row" id="delivery-time-row">
+       
+        
+      </div>
+      <div class="summary-row">
+        <span>Subtotal</span>
+        <span id="subtotal-amount">Tk 0</span>
+      </div>
+      <div class="summary-row" id="delivery-fee-row">
+        <span>Standard delivery</span>
+        <span id="delivery-fee-amount">Tk 0</span>
+      </div>
+      <div class="summary-row">
+        <span>Service fee <i class="fas fa-info-circle"></i></span>
+        <span id="service-fee-amount">Tk 5</span>
+      </div>
+      <div class="summary-row total-row">
+        <span>Total (incl. fees and tax)</span>
+        <span id="total-amount">Tk 0</span>
+      </div>
+    </div>
+
+    <!-- Checkout Button -->
+    <div class="cart-footer">
+      <button id="checkout-btn" class="checkout-btn">Review payment and address</button>
+    </div>
+  </div>
+
+  <!-- Payment Modal -->
+  <div class="payment-modal" id="payment-modal" style="display: none;">
+    <div class="payment-modal-content">
+      <div class="payment-modal-header">
+        <h2>Complete Your Order</h2>
+        <button class="close-modal" id="close-payment-modal">&times;</button>
+      </div>
+
+      <div class="payment-modal-body">
+        <!-- Order Summary -->
+        <div class="order-summary-section">
+          <h3>Order Summary</h3>
+          <div id="order-items-list"></div>
+          <div class="order-totals">
+            <div class="total-row">
+              <span>Subtotal</span>
+              <span id="modal-subtotal">Tk 0</span>
+            </div>
+            <div class="total-row" id="modal-delivery-row">
+              <span>Delivery Fee</span>
+              <span id="modal-delivery-fee">Tk 0</span>
+            </div>
+            <div class="total-row">
+              <span>Service Fee</span>
+              <span id="modal-service-fee">Tk 5</span>
+            </div>
+            <div class="total-row total-amount-row">
+              <span><strong>Total Amount</strong></span>
+              <span id="modal-total"><strong>Tk 0</strong></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Delivery Address (only for delivery) -->
+        <div class="delivery-address-section" id="delivery-address-section" style="display: none;">
+          <h3>Delivery Address</h3>
+          <textarea id="delivery-address" placeholder="Enter your delivery address..." rows="3"></textarea>
+        </div>
+
+        <!-- Pickup Time (only for pickup) -->
+        <div class="pickup-time-section" id="pickup-time-section" style="display: none;">
+          <h3>Pickup Time</h3>
+          <input type="datetime-local" id="pickup-time" />
+        </div>
+
+        <!-- Payment Method Selection -->
+        <div class="payment-method-section">
+          <h3>Payment Method</h3>
+          
+          <!-- Cash on Delivery (only for delivery) -->
+          <div class="payment-option" id="cash-option" style="display: none;">
+            <input type="radio" id="payment-cash" name="payment-method" value="cash" />
+            <label for="payment-cash">
+              <i class="fas fa-money-bill-wave"></i>
+              <span>Cash on Delivery</span>
+            </label>
+          </div>
+
+          <!-- bKash Payment -->
+          <div class="payment-option">
+            <input type="radio" id="payment-bkash" name="payment-method" value="bkash" checked />
+            <label for="payment-bkash">
+              <i class="fas fa-mobile-alt"></i>
+              <span>bKash Payment</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Order Notes -->
+        <div class="order-notes-section">
+          <h3>Special Instructions (Optional)</h3>
+          <textarea id="order-notes" placeholder="Add any special requests..." rows="2"></textarea>
+        </div>
+      </div>
+
+      <div class="payment-modal-footer">
+        <button class="btn-cancel" id="cancel-payment">Cancel</button>
+        <button class="btn-confirm" id="confirm-payment">
+          <i class="fas fa-lock"></i> Place Order
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🔥 PERSISTENT ORDER TRACKING WIDGET (Fixed at bottom right) -->
+  <div id="order-tracking-widget" class="order-tracking-widget" style="display: none;">
+    <div class="widget-header">
+      <i class="fas fa-motorcycle"></i>
+      <span id="widget-status-text">Order On The Way</span>
+      <button class="widget-close-btn" onclick="closeTrackingWidget()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="widget-body">
+      <div class="widget-order-info">
+        <p class="widget-restaurant-name" id="widget-restaurant-name">Loading...</p>
+        <p class="widget-order-id">Order #<span id="widget-order-id">---</span></p>
+      </div>
+      <div class="widget-progress">
+        <div class="progress-step completed">
+          <i class="fas fa-check-circle"></i>
+          <span>Confirmed</span>
+        </div>
+        <div class="progress-step" id="widget-preparing">
+          <i class="fas fa-clock"></i>
+          <span>Preparing</span>
+        </div>
+        <div class="progress-step" id="widget-on-way">
+          <i class="fas fa-motorcycle"></i>
+          <span>On The Way</span>
+        </div>
+      </div>
+      <button class="widget-track-btn" onclick="openTrackingPage()">
+        <i class="fas fa-map-marked-alt"></i> Track on Map
+      </button>
+    </div>
+  </div>
+
+  <script>
+    let btn = document.querySelector("#btn");
+    let sidebar = document.querySelector(".sidebar");
+    let searchBtn = document.querySelector(".bx-search-alt");
+
+    btn.onclick = function () {
+      sidebar.classList.toggle("active");
+    }
+    searchBtn.onclick = function () {
+      sidebar.classList.toggle("active");
+    }
+  </script>
+
+
+
+
+
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      // ───── Step 0: first-time check & popup wiring ─────
+      const consumerId = localStorage.getItem("consumer_id");
+      if (!consumerId) return console.error("No consumer_id in localStorage");
+
+      // ask the backend
+      let isFirst = false;
+      try {
+        const resp = await fetch(`/api/consumer/first-time?consumer_id=${consumerId}`);
+        const json = await resp.json();
+        isFirst = resp.ok && (json.firstTime === true || json.firstTime === "true");
+      } catch (e) {
+        console.error("First-time check failed:", e);
+      }
+      if (!isFirst) return; // returning user—nothing to do
+
+      // grab popup & screens
+      const popup = document.getElementById("welcome-popup");
+      const screens = {
+        welcome: document.getElementById("welcome-screen"),
+        step1: document.getElementById("step-1"),
+        step2: document.getElementById("step-2"),
+        step3: document.getElementById("step-3"),
+      };
+      function showScreen(el) {
+        Object.values(screens).forEach(s => s.classList.remove("active"));
+        el.classList.add("active");
+      }
+      // show popup
+      popup.style.display = "flex";
+      showScreen(screens.welcome);
+
+      // navigation buttons
+      document.getElementById("get-started-btn").onclick = () => showScreen(screens.step1);
+      document.getElementById("back-to-welcome").onclick = () => showScreen(screens.welcome);
+      document.getElementById("to-step-2").onclick = () => {
+        showScreen(screens.step2);
+        // force Leaflet to recalc size
+        setTimeout(() => map && map.invalidateSize(), 100);
+      };
+      document.getElementById("back-to-step-1").onclick = () => showScreen(screens.step1);
+      document.getElementById("to-step-3").onclick = () => showScreen(screens.step3);
+      document.getElementById("back-to-step-2").onclick = () => showScreen(screens.step2);
+
+      // ───────── Step 2: Map & Geocoding ─────────
+      let map, tileURL, debounceTimeout;
+      const locationInput = document.getElementById("location-input");
+      const suggestionsList = document.getElementById("location-suggestions");
+      const locateBtn = document.getElementById("locate-me-btn");
+      const clearBtn = document.getElementById("clear-location-btn");
+      const centerMarker = document.getElementById("map-center-marker");
+
+      // 1) load tile URL
+      (async () => {
+        try {
+          const resp = await fetch("/api/map/tile-url");
+          const json = await resp.json();
+          tileURL = json.tileURL;
+        } catch (err) {
+          console.error("Failed to fetch tile URL:", err);
+        }
+      })();
+
+      // 2) reverse geocode
+      async function reverseGeocode(lat, lon) {
+        try {
+          const res = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=16&addressdetails=1&accept-language=en`
+          );
+          const data = await res.json();
+          return data.display_name || "";
+        } catch {
+          return "";
+        }
+      }
+
+      // Normalize address - extract key parts for cleaner display
+      function normalizeAddress(fullAddress) {
+        if (!fullAddress) return 'Unknown location';
+        
+        // Split by comma and get relevant parts
+        const parts = fullAddress.split(',').map(p => p.trim());
+        
+        // Try to extract: Area, City/District, Division
+        // Example: "Mirpur 10, Dhaka, Dhaka Division, Bangladesh" → "Mirpur 10, Dhaka"
+        if (parts.length >= 3) {
+          return `${parts[0]}, ${parts[1]}`;
+        } else if (parts.length === 2) {
+          return `${parts[0]}, ${parts[1]}`;
+        } else {
+          return parts[0] || fullAddress;
+        }
+      }
+
+      // 3) update input on map move/zoom
+      async function updateInputWithCenter() {
+        if (!map) return;
+        const c = map.getCenter();
+        locationInput.value = await reverseGeocode(c.lat, c.lng);
+      }
+
+      // 4) Locate me
+      locateBtn.addEventListener("click", () => {
+        if (!navigator.geolocation) return alert("Geolocation not supported.");
+        navigator.geolocation.getCurrentPosition(async ({ coords }) => {
+          const { latitude, longitude } = coords;
+          if (!map) {
+            map = L.map("map-container", { zoomControl: true, scrollWheelZoom: false })
+              .setView([latitude, longitude], 16);
+            L.tileLayer(tileURL, {
+              tileSize: 512,
+              zoomOffset: -1,
+              attribution:
+                `<a href="https://www.maptiler.com/">© MapTiler</a>
+                 <a href="https://www.openstreetmap.org/">© OSM</a>`
+            }).addTo(map);
+            map.on("moveend zoomend", updateInputWithCenter);
+          } else {
+            map.setView([latitude, longitude], 16);
+          }
+          centerMarker.classList.remove("hidden");
+          locationInput.value = await reverseGeocode(latitude, longitude);
+        }, () => alert("Please allow location access."));
+      });
+
+      // 5) Clear
+      clearBtn.addEventListener("click", () => {
+        locationInput.value = "";
+        suggestionsList.innerHTML = "";
+        suggestionsList.classList.add("hidden");
+        centerMarker.classList.add("hidden");
+      });
+
+      // 6) Autocomplete
+      locationInput.addEventListener("input", () => {
+        const q = locationInput.value.trim();
+        clearTimeout(debounceTimeout);
+        if (!q) {
+          suggestionsList.innerHTML = "";
+          suggestionsList.classList.add("hidden");
+          return;
+        }
+        debounceTimeout = setTimeout(async () => {
+          const url = `https://nominatim.openstreetmap.org/search?format=json&limit=5&countrycodes=bd&q=${encodeURIComponent(q)}`;
+          try {
+            const resp = await fetch(url);
+            const data = await resp.json();
+            suggestionsList.innerHTML = data.length
+              ? data.map(p =>
+                `<li data-lat="${p.lat}" data-lon="${p.lon}">${p.display_name}</li>`
+              ).join("")
+              : "<li>No results found</li>";
+            suggestionsList.classList.remove("hidden");
+          } catch (err) {
+            console.error(err);
+          }
+        }, 300);
+      });
+
+      // 7) Pick suggestion
+      suggestionsList.addEventListener("click", e => {
+        if (e.target.tagName !== "LI") return;
+        const lat = +e.target.dataset.lat;
+        const lon = +e.target.dataset.lon;
+        const name = e.target.textContent;
+        if (!map) {
+          map = L.map("map-container", { zoomControl: true, scrollWheelZoom: false })
+            .setView([lat, lon], 16);
+          L.tileLayer(tileURL, {
+            tileSize: 512,
+            zoomOffset: -1,
+            attribution:
+              `<a href="https://www.maptiler.com/">© MapTiler</a>
+               <a href="https://www.openstreetmap.org/">© OSM</a>`
+          }).addTo(map);
+          map.on("moveend zoomend", updateInputWithCenter);
+        } else {
+          map.setView([lat, lon], 16);
+        }
+        centerMarker.classList.remove("hidden");
+        locationInput.value = name;
+        suggestionsList.innerHTML = "";
+        suggestionsList.classList.add("hidden");
+      });
+
+      // 8) hide suggestions on outside click
+      document.addEventListener("click", e => {
+        if (
+          !suggestionsList.contains(e.target) &&
+          e.target !== locationInput
+        ) {
+          suggestionsList.innerHTML = "";
+          suggestionsList.classList.add("hidden");
+        }
+      });
+
+
+      // ───────── Step 3: Finish & submit ─────────
+      document.getElementById("finish-setup").onclick = async () => {
+        // collect fields
+        const name = document.getElementById("consumer-name").value.trim();
+        const number = document.getElementById("consumer-number").value.trim();
+        const address = locationInput.value.trim();
+        const gender = document.getElementById("consumer-gender").value;
+        const age = document.getElementById("consumer-age").value;
+        const picFile = document.getElementById("consumer-pic").files[0];
+
+        if (!name || !number || !address || !gender || !age) {
+          return alert("Please complete all required fields.");
+        }
+
+        // read current map center
+        let lat = "", lng = "";
+        if (map) {
+          const c = map.getCenter();
+          lat = c.lat.toFixed(6);
+          lng = c.lng.toFixed(6);
+        }
+
+        // prepare FormData
+        const formData = new FormData();
+        formData.append("consumer_id", consumerId);
+        formData.append("full_name", name);
+        formData.append("number", number);
+        formData.append("address", address);
+        formData.append("gender", gender);
+        formData.append("age", age);
+        formData.append("lat", lat);
+        formData.append("lng", lng);
+        if (picFile) formData.append("profile_pic", picFile);
+
+        // send to backend
+        try {
+          const res = await fetch("/api/consumer/update-info", {
+            method: "POST",
+            body: formData
+          });
+          const data = await res.json();
+          if (res.ok) {
+            alert("🎉 Setup complete — welcome to Khadok!");
+            popup.style.display = "none";
+          } else {
+            alert("Error saving info: " + data.error);
+          }
+        } catch (err) {
+          console.error("Submit failed:", err);
+          alert("Something went wrong. Please try again.");
+        }
+      };
+    });
+  </script>
+
+
+
+  <script>
+    // 🔹 Create a promise that resolves when location is loaded from database
+    window.locationReadyPromise = new Promise((resolve) => {
+      window.resolveLocationReady = resolve;
+    });
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      const userEmail = document.getElementById("userEmail").textContent || localStorage.getItem("userEmail");
+      const locationName = document.getElementById("location-name");
+
+      // Get consumerId from localStorage
+      const consumerId = localStorage.getItem("consumer_id");
+
+      if (!consumerId) {
+        console.error("No consumer_id found in localStorage");
+        window.resolveLocationReady(false); // Resolve with false if no consumer_id
+        return;
+      }
+
+      // 🔹 ALWAYS fetch user location from database on page load/refresh
+      // This resets temporary location to permanent address
+      try {
+        const res = await fetch(`/api/location/${consumerId}`);
+        const data = await res.json();
+
+        if (data.success && data.lat && data.lng) {
+          const lat = parseFloat(data.lat);
+          const lng = parseFloat(data.lng);
+
+          // ALWAYS update localStorage with database values (permanent address)
+          localStorage.setItem("current_user_lat", lat);
+          localStorage.setItem("current_user_lng", lng);
+
+          console.log("✅ Location reset to permanent address from database:", { lat, lng });
+          
+          // Load location name
+          await loadLocationName();
+          
+          // 🔥 Resolve the promise to signal that location is ready
+          window.resolveLocationReady(true);
+        } else {
+          console.warn("⚠️ No location data found in database");
+          window.resolveLocationReady(false);
+        }
+      } catch (err) {
+        console.error("❌ Failed to fetch location from database:", err);
+        window.resolveLocationReady(false);
+      }
+
+      // Normalize address - extract key parts for cleaner display
+      function normalizeAddress(fullAddress) {
+        if (!fullAddress) return 'Unknown location';
+        
+        // Split by comma and get relevant parts
+        const parts = fullAddress.split(',').map(p => p.trim());
+        
+        // Try to extract: Area, City/District
+        // Example: "Mirpur 10, Dhaka, Dhaka Division, Bangladesh" → "Mirpur 10, Dhaka"
+        if (parts.length >= 3) {
+          return `${parts[0]}, ${parts[1]}`;
+        } else if (parts.length === 2) {
+          return `${parts[0]}, ${parts[1]}`;
+        } else {
+          return parts[0] || fullAddress;
+        }
+      }
+
+      // 🔹 Load and display location name immediately on page load
+      async function loadLocationName() {
+        try {
+          const lat = localStorage.getItem('current_user_lat');
+          const lng = localStorage.getItem('current_user_lng');
+          
+          if (lat && lng) {
+            // Reverse geocode to get address
+            const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`;
+            const resp = await fetch(url);
+            const json = await resp.json();
+            const fullAddress = json.display_name || "Your location";
+            const normalizedAddr = normalizeAddress(fullAddress);
+            locationName.textContent = normalizedAddr;
+          }
+        } catch (error) {
+          console.error("Failed to load location name:", error);
+          locationName.textContent = "Set your location";
+        }
+      }
+    });
+  </script>
+
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const locateBtn = document.getElementById('locate-me-btn');
+    const findBtn = document.getElementById('find-btn');
+    const locationInput = document.getElementById('location-input');
+    const centerMarker = document.getElementById('map-center-marker');
+    const suggestionsList = document.getElementById('location-suggestions');
+    const clearBtn = document.getElementById('clear-location-btn');
+  
+    let map;
+    let debounceTimeout = null;
+    let tileURL = ''; // will be fetched from backend
+  
+    // --- Fetch tile URL from backend
+    async function fetchTileURL() {
+      try {
+        const res = await fetch('api/map/tile-url');
+        const data = await res.json();
+        tileURL = data.tileURL;
+      } catch (err) {
+        console.error('Failed to fetch tile URL:', err);
+        tileURL = '/fallback-tiles/{z}/{x}/{y}.png'; // fallback
+      }
+    }
+  
+    // --- Reverse geocode (coords → readable address)
+    async function reverseGeocode(lat, lon) {
+      try {
+        const res = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=16&addressdetails=1&accept-language=en`
+        );
+        const data = await res.json();
+        return data.display_name || '';
+      } catch (err) {
+        console.error('Reverse geocode failed:', err);
+        return '';
+      }
+    }
+
+    // Normalize address - extract key parts for cleaner display
+    function normalizeAddress(fullAddress) {
+      if (!fullAddress) return 'Unknown location';
+      
+      // Split by comma and get relevant parts
+      const parts = fullAddress.split(',').map(p => p.trim());
+      
+      // Try to extract: Area, City/District, Division
+      // Example: "Mirpur 10, Dhaka, Dhaka Division, Bangladesh" → "Mirpur 10, Dhaka"
+      if (parts.length >= 3) {
+        return `${parts[0]}, ${parts[1]}`;
+      } else if (parts.length === 2) {
+        return `${parts[0]}, ${parts[1]}`;
+      } else {
+        return parts[0] || fullAddress;
+      }
+    }
+  
+    // --- Update input when map center changes
+    async function updateInputWithCenter() {
+      if (!map) return;
+      const c = map.getCenter();
+      const address = await reverseGeocode(c.lat, c.lng);
+      locationInput.value = address;
+    }
+  
+    // --- Initialize map lazily
+    function initMap(lat, lon) {
+      if (map) return map;
+  
+      map = L.map('map-container', {
+        zoomControl: true,
+        scrollWheelZoom: false,
+        doubleClickZoom: true,
+        touchZoom: true,
+        keyboard: false
+      }).setView([lat, lon], 16);
+  
+      // Use the fetched tile URL
+      L.tileLayer(tileURL, {
+        tileSize: 512,
+        zoomOffset: -1,
+        attribution:
+          "<a href='https://www.maptiler.com/' target='_blank'>© MapTiler</a> <a href='https://www.openstreetmap.org/' target='_blank'>© OSM</a>"
+      }).addTo(map);
+  
+      map.on('moveend zoomend', updateInputWithCenter);
+      return map;
+    }
+  
+    // --- Locate user
+    locateBtn.addEventListener('click', async () => {
+      if (!navigator.geolocation) return alert('Geolocation not supported.');
+      navigator.geolocation.getCurrentPosition(
+        async ({ coords }) => {
+          const { latitude, longitude } = coords;
+          const m = initMap(latitude, longitude);
+          m.flyTo([latitude, longitude], 16, { duration: 1.0 });
+          centerMarker.classList.remove('hidden');
+          const address = await reverseGeocode(latitude, longitude);
+          locationInput.value = address;
+        },
+        () => alert('Please allow location access.')
+      );
+    });
+  
+    // --- Clear search input
+    clearBtn.addEventListener('click', () => {
+      locationInput.value = '';
+      suggestionsList.innerHTML = '';
+      suggestionsList.classList.add('hidden');
+    });
+  
+    // --- Save center coordinates
+    findBtn?.addEventListener('click', () => {
+      if (!map) return alert('Map not initialized.');
+      const center = map.getCenter();
+      localStorage.setItem('tempLat', center.lat.toFixed(5));
+      localStorage.setItem('tempLng', center.lng.toFixed(5));
+    });
+  
+    // --- Handle input (suggestions)
+    locationInput.addEventListener('input', () => {
+      const query = locationInput.value.trim();
+      if (debounceTimeout) clearTimeout(debounceTimeout);
+  
+      if (!query) {
+        suggestionsList.innerHTML = '';
+        suggestionsList.classList.add('hidden');
+        return;
+      }
+  
+      debounceTimeout = setTimeout(async () => {
+        try {
+          const url = `https://nominatim.openstreetmap.org/search?format=json&limit=5&countrycodes=bd&q=${encodeURIComponent(query)}`;
+          const res = await fetch(url, { headers: { 'Accept-Language': 'en' } });
+          const data = await res.json();
+          suggestionsList.innerHTML = data.length
+            ? data.map(p => `<li data-lat="${p.lat}" data-lon="${p.lon}">${p.display_name}</li>`).join('')
+            : '<li>No results found</li>';
+          suggestionsList.classList.remove('hidden');
+        } catch (err) {
+          console.error(err);
+        }
+      }, 300);
+    });
+  
+    // --- Click suggestion
+    suggestionsList.addEventListener('click', e => {
+      if (e.target.tagName !== 'LI') return;
+      const lat = parseFloat(e.target.dataset.lat);
+      const lon = parseFloat(e.target.dataset.lon);
+      const name = e.target.textContent;
+      const m = initMap(lat, lon);
+      m.flyTo([lat, lon], 16, { duration: 1.0 });
+      locationInput.value = name;
+      suggestionsList.innerHTML = '';
+      suggestionsList.classList.add('hidden');
+      centerMarker.classList.remove('hidden');
+    });
+  
+    // --- Hide suggestions when clicking elsewhere
+    document.addEventListener('click', e => {
+      if (!locationInput.contains(e.target) && !suggestionsList.contains(e.target)) {
+        suggestionsList.classList.add('hidden');
+      }
+    });
+  
+    // --- Fetch tile URL first
+    fetchTileURL();
+  });
+  </script>
+  
+
+  <script src="js/app.js"></script>
+  <script src="js/dashboard-cart.js"></script>
+
+  <!-- Filter Panel JavaScript -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const openFilterBtn = document.getElementById('open-filter-panel');
+      const filterOverlay = document.getElementById('filter-overlay');
+      const filterPanel = document.getElementById('filter-panel');
+      const filterCloseBtn = document.getElementById('filter-close-btn');
+      const filterApplyBtn = document.getElementById('filter-apply-btn');
+      const filterClearBtn = document.getElementById('filter-clear-btn');
+      const showMoreBtn = document.getElementById('show-more-cuisines');
+      const cuisineSearch = document.getElementById('cuisine-search');
+      const cuisineList = document.getElementById('cuisine-list');
+
+      // Open filter panel
+      if (openFilterBtn) {
+        openFilterBtn.addEventListener('click', () => {
+          filterOverlay.classList.add('active');
+          filterPanel.classList.add('active');
+        });
+      }
+
+      // Close filter panel
+      function closeFilterPanel() {
+        filterOverlay.classList.remove('active');
+        filterPanel.classList.remove('active');
+      }
+
+      if (filterCloseBtn) {
+        filterCloseBtn.addEventListener('click', closeFilterPanel);
+      }
+
+      if (filterOverlay) {
+        filterOverlay.addEventListener('click', closeFilterPanel);
+      }
+
+      // Show More / Show Less Cuisines
+      let showingAll = false;
+      if (showMoreBtn) {
+        showMoreBtn.addEventListener('click', () => {
+          const allCuisineItems = cuisineList.querySelectorAll('.checkbox-item');
+          
+          if (showingAll) {
+            // Hide extra cuisines (keep only first 10 visible)
+            allCuisineItems.forEach((item, index) => {
+              if (index >= 10) {
+                item.classList.add('hidden');
+              }
+            });
+            showMoreBtn.innerHTML = 'Show More <i class="fas fa-chevron-down"></i>';
+            showMoreBtn.classList.remove('expanded');
+            showingAll = false;
+          } else {
+            // Show all cuisines
+            allCuisineItems.forEach(item => {
+              item.classList.remove('hidden');
+            });
+            showMoreBtn.innerHTML = 'Show Less <i class="fas fa-chevron-up"></i>';
+            showMoreBtn.classList.add('expanded');
+            showingAll = true;
+          }
+        });
+      }
+
+      // Cuisine Search Functionality
+      if (cuisineSearch) {
+        cuisineSearch.addEventListener('input', (e) => {
+          const searchTerm = e.target.value.toLowerCase().trim();
+          const allCuisineItems = cuisineList.querySelectorAll('.checkbox-item');
+          
+          if (!searchTerm) {
+            // Reset to default view when search is empty
+            allCuisineItems.forEach((item, index) => {
+              if (showingAll) {
+                item.classList.remove('hidden');
+              } else {
+                if (index < 10) {
+                  item.classList.remove('hidden');
+                } else {
+                  item.classList.add('hidden');
+                }
+              }
+            });
+            return;
+          }
+
+          // Show matching cuisines, hide non-matching
+          allCuisineItems.forEach(item => {
+            const label = item.querySelector('label').textContent.toLowerCase();
+            if (label.includes(searchTerm)) {
+              item.classList.remove('hidden');
+            } else {
+              item.classList.add('hidden');
+            }
+          });
+        });
+      }
+
+      // Clear All Filters
+      if (filterClearBtn) {
+        filterClearBtn.addEventListener('click', () => {
+          // Uncheck all checkboxes
+          const allCheckboxes = filterPanel.querySelectorAll('input[type="checkbox"]');
+          allCheckboxes.forEach(checkbox => {
+            checkbox.checked = false;
+          });
+          
+          // Clear search
+          if (cuisineSearch) {
+            cuisineSearch.value = '';
+            cuisineSearch.dispatchEvent(new Event('input'));
+          }
+          
+          console.log('✅ All filters cleared');
+        });
+      }
+
+      // Apply Filters
+      if (filterApplyBtn) {
+        filterApplyBtn.addEventListener('click', () => {
+          // Collect selected offers
+          const selectedOffers = [];
+          const offerCheckboxes = document.querySelectorAll('#filter-panel input[id^="offer-"]:checked');
+          offerCheckboxes.forEach(checkbox => {
+            selectedOffers.push(checkbox.value);
+          });
+
+          // Collect selected cuisines
+          const selectedCuisines = [];
+          const cuisineCheckboxes = document.querySelectorAll('#filter-panel input[id^="cuisine-"]:checked');
+          cuisineCheckboxes.forEach(checkbox => {
+            selectedCuisines.push(checkbox.value);
+          });
+
+          console.log('🔍 Filters applied:', {
+            offers: selectedOffers,
+            cuisines: selectedCuisines
+          });
+
+          // TODO: Apply filters to restaurant list
+          // This will be implemented when we integrate with backend cuisine data
+          
+          alert(`Filters applied!\nOffers: ${selectedOffers.length}\nCuisines: ${selectedCuisines.length}`);
+          closeFilterPanel();
+        });
+      }
+    });
+  </script>
+
+  <!-- Location Modal Map Initialization -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const locationModal = document.getElementById('location-modal');
+      const locationModalBackdrop = document.querySelector('.location-modal-backdrop');
+      const openLocationBtn = document.getElementById('open-location-btn');
+      const closeModalBtn = document.getElementById('location-modal-close');
+      const cancelBtn = document.getElementById('location-cancel-btn');
+      const saveLocationBtn = document.getElementById('location-save-btn');
+      
+      const mapModalInner = document.getElementById('map-modal-inner');
+      const locationInputModal = document.querySelector('.location-modal-body input#location-input-modal');
+      const locateBtnModal = document.querySelector('.location-modal-body .btn-ghost[title*="current location"]');
+      const clearBtnModal = document.querySelector('.location-modal-body .btn-ghost[title="Clear search"]');
+      const suggestionsModalList = document.querySelector('.location-modal-body .location-suggestions');
+      const selectedCoordsEl = document.getElementById('selected-coords');
+      const selectedAddressEl = document.getElementById('selected-address');
+      const mapCenterMarkerModal = document.querySelector('.map-center-marker');
+      const locationNameDisplay = document.getElementById('location-name');
+
+      let mapModal;
+      let tileURL = '';
+      let debounceTimeoutModal = null;
+      let currentLat = 23.8103, currentLng = 90.3563; // Default to Dhaka
+
+      // Fetch tile URL
+      async function fetchTileURL() {
+        try {
+          const res = await fetch('/api/map/tile-url');
+          const data = await res.json();
+          tileURL = data.tileURL;
+          console.log('✅ Modal: Tile URL loaded');
+        } catch (err) {
+          console.error('❌ Modal: Failed to fetch tile URL:', err);
+          tileURL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+        }
+      }
+
+      // Reverse geocode
+      async function reverseGeocode(lat, lon) {
+        try {
+          const res = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=16&addressdetails=1&accept-language=en`
+          );
+          const data = await res.json();
+          return data.display_name || 'Unknown location';
+        } catch (err) {
+          console.error('Reverse geocode failed:', err);
+          return 'Unknown location';
+        }
+      }
+
+      // Normalize address - extract key parts for cleaner display
+      function normalizeAddress(fullAddress) {
+        if (!fullAddress) return 'Unknown location';
+        
+        // Split by comma and get relevant parts
+        const parts = fullAddress.split(',').map(p => p.trim());
+        
+        // Try to extract: Area, City/District, Division
+        // Example: "Mirpur 10, Dhaka, Dhaka Division, Bangladesh" → "Mirpur 10, Dhaka"
+        if (parts.length >= 3) {
+          return `${parts[0]}, ${parts[1]}`;
+        } else if (parts.length === 2) {
+          return `${parts[0]}, ${parts[1]}`;
+        } else {
+          return parts[0] || fullAddress;
+        }
+      }
+
+      // Initialize map in modal
+      function initMapModal(lat, lon) {
+        try {
+          console.log('🗺️ Attempting to initialize map with:', { lat, lon, tileURL });
+          
+          if (mapModal) {
+            console.log('🔄 Map already exists, just updating view');
+            mapModal.setView([lat, lon], 16);
+            return mapModal;
+          }
+
+          // Ensure container exists and is visible
+          if (!mapModalInner) {
+            console.error('❌ Map container not found!');
+            return null;
+          }
+
+          const containerRect = mapModalInner.getBoundingClientRect();
+          console.log('📏 Container dimensions:', { 
+            width: containerRect.width, 
+            height: containerRect.height 
+          });
+
+          if (containerRect.width === 0 || containerRect.height === 0) {
+            console.error('❌ Container has zero dimensions!');
+            return null;
+          }
+
+          // Clear any existing content
+          mapModalInner.innerHTML = '';
+
+          console.log('🎯 Creating new Leaflet map instance...');
+          mapModal = L.map(mapModalInner, {
+            zoomControl: true,
+            scrollWheelZoom: true,
+            doubleClickZoom: true,
+            touchZoom: true,
+            keyboard: true
+          }).setView([lat, lon], 16);
+
+          console.log('🗺️ Adding tile layer with URL:', tileURL);
+          L.tileLayer(tileURL, {
+            tileSize: 512,
+            zoomOffset: -1,
+            attribution: "<a href='https://www.maptiler.com/' target='_blank'>© MapTiler</a> <a href='https://www.openstreetmap.org/' target='_blank'>© OSM</a>"
+          }).addTo(mapModal);
+
+          // 🔥 Add custom user icon marker at center (matching restaurants map style)
+          const userIcon = L.divIcon({
+            html: `<div style="
+              background-color: #4285f4;
+              width: 30px;
+              height: 30px;
+              border-radius: 50%;
+              border: 3px solid white;
+              box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            ">
+              <i class="fas fa-user" style="color: white; font-size: 14px;"></i>
+            </div>`,
+            className: 'modal-user-marker',
+            iconSize: [36, 36],
+            iconAnchor: [18, 18]
+          });
+
+          console.log('📍 Adding user marker to map...');
+          const userMarker = L.marker([lat, lon], { 
+            icon: userIcon,
+            draggable: false
+          }).addTo(mapModal);
+
+          userMarker.bindPopup(`
+            <div class="restaurant-popup">
+              <h4><i class="fas fa-map-marker-alt"></i> Your Location</h4>
+              <p>Pan the map to select a location</p>
+            </div>
+          `);
+
+          // Update marker position when map moves to keep it centered
+          mapModal.on('moveend zoomend drag', () => {
+            const center = mapModal.getCenter();
+            userMarker.setLatLng(center);
+            currentLat = center.lat;
+            currentLng = center.lng;
+            updateSelectedInfo(currentLat, currentLng);
+          });
+
+          console.log('✅ Map initialized successfully!');
+          return mapModal;
+        } catch (error) {
+          console.error('❌ Error initializing map:', error);
+          return null;
+        }
+      }
+
+      // Update the selected coordinates and address display
+      async function updateSelectedInfo(lat, lon) {
+        currentLat = lat;
+        currentLng = lon;
+        if (selectedCoordsEl) {
+          selectedCoordsEl.textContent = `Lat: ${lat.toFixed(4)}, Lng: ${lon.toFixed(4)}`;
+        }
+        const address = await reverseGeocode(lat, lon);
+        if (selectedAddressEl) {
+          selectedAddressEl.textContent = address;
+        }
+        // Show FULL address in modal input (not normalized)
+        if (locationInputModal) {
+          locationInputModal.value = address;
+        }
+      }
+
+      // Open modal
+      if (openLocationBtn) {
+        openLocationBtn.addEventListener('click', async () => {
+          locationModal.classList.remove('hidden');
+          locationModal.setAttribute('aria-hidden', 'false');
+          
+          await fetchTileURL();
+          
+          // Get user's location from localStorage or use default
+          const savedLat = localStorage.getItem('current_user_lat');
+          const savedLng = localStorage.getItem('current_user_lng');
+          const startLat = savedLat ? parseFloat(savedLat) : currentLat;
+          const startLng = savedLng ? parseFloat(savedLng) : currentLng;
+          
+          // 🔥 Wait for modal to be visible before initializing map
+          setTimeout(() => {
+            if (!mapModal) {
+              console.log('🗺️ Initializing modal map...');
+              initMapModal(startLat, startLng);
+              currentLat = startLat;
+              currentLng = startLng;
+              updateSelectedInfo(startLat, startLng);
+            } else {
+              console.log('🔄 Refreshing existing modal map...');
+              mapModal.invalidateSize(); // Force Leaflet to recalculate size
+              mapModal.setView([startLat, startLng], 16);
+              updateSelectedInfo(startLat, startLng);
+            }
+          }, 300); // Increased delay to ensure modal is fully rendered
+        });
+      }
+
+      // Close modal handlers
+      function closeModal() {
+        locationModal.classList.add('hidden');
+        locationModal.setAttribute('aria-hidden', 'true');
+        if (suggestionsModalList) {
+          suggestionsModalList.innerHTML = '';
+          suggestionsModalList.classList.add('hidden');
+        }
+      }
+
+      if (closeModalBtn) {
+        closeModalBtn.addEventListener('click', closeModal);
+      }
+
+      if (cancelBtn) {
+        cancelBtn.addEventListener('click', closeModal);
+      }
+
+      if (locationModalBackdrop) {
+        locationModalBackdrop.addEventListener('click', closeModal);
+      }
+
+      // Save location (ONLY to localStorage - temporary change)
+      if (saveLocationBtn) {
+        saveLocationBtn.addEventListener('click', async () => {
+          const fullAddress = locationInputModal?.value || await reverseGeocode(currentLat, currentLng);
+          const normalizedAddr = normalizeAddress(fullAddress);
+
+          // Update localStorage with temporary location
+          localStorage.setItem('current_user_lat', currentLat);
+          localStorage.setItem('current_user_lng', currentLng);
+          localStorage.setItem('temp_location_address', fullAddress);
+          
+          // Update navbar location display with normalized address
+          if (locationNameDisplay) {
+            locationNameDisplay.textContent = normalizedAddr;
+          }
+          
+          console.log('📍 Temporary location saved to localStorage:', {
+            lat: currentLat,
+            lng: currentLng,
+            fullAddress: fullAddress,
+            displayAddress: normalizedAddr
+          });
+          
+          // 🔥 Refresh restaurants and map with new location
+          if (window.loadNearbyRestaurants) {
+            console.log('🔄 Refreshing restaurants based on new location...');
+            setTimeout(() => {
+              window.loadNearbyRestaurants();
+            }, 300); // Small delay to ensure localStorage is updated
+          }
+          
+          alert('✅ Location updated temporarily!');
+          closeModal();
+        });
+      }
+
+      // Locate user
+      if (locateBtnModal) {
+        locateBtnModal.addEventListener('click', () => {
+          if (!navigator.geolocation) {
+            alert('Geolocation not supported by your browser.');
+            return;
+          }
+          navigator.geolocation.getCurrentPosition(
+            async ({ coords }) => {
+              const { latitude, longitude } = coords;
+              if (!mapModal) {
+                initMapModal(latitude, longitude);
+              } else {
+                mapModal.flyTo([latitude, longitude], 16, { duration: 1.0 });
+              }
+              currentLat = latitude;
+              currentLng = longitude;
+              mapCenterMarkerModal?.classList.remove('hidden');
+              await updateSelectedInfo(latitude, longitude);
+            },
+            (error) => {
+              console.error('Geolocation error:', error);
+              alert('Please allow location access to use this feature.');
+            }
+          );
+        });
+      }
+
+      // Clear button
+      if (clearBtnModal) {
+        clearBtnModal.addEventListener('click', () => {
+          if (locationInputModal) locationInputModal.value = '';
+          if (suggestionsModalList) {
+            suggestionsModalList.innerHTML = '';
+            suggestionsModalList.classList.add('hidden');
+          }
+        });
+      }
+
+      // Autocomplete search
+      if (locationInputModal) {
+        locationInputModal.addEventListener('input', () => {
+          const query = locationInputModal.value.trim();
+          if (debounceTimeoutModal) clearTimeout(debounceTimeoutModal);
+
+          if (!query) {
+            if (suggestionsModalList) {
+              suggestionsModalList.innerHTML = '';
+              suggestionsModalList.classList.add('hidden');
+            }
+            return;
+          }
+
+          debounceTimeoutModal = setTimeout(async () => {
+            try {
+              const url = `https://nominatim.openstreetmap.org/search?format=json&limit=5&countrycodes=bd&q=${encodeURIComponent(query)}`;
+              const res = await fetch(url, { headers: { 'Accept-Language': 'en' } });
+              const data = await res.json();
+              if (suggestionsModalList) {
+                suggestionsModalList.innerHTML = data.length
+                  ? data.map(p => `<li data-lat="${p.lat}" data-lon="${p.lon}">${p.display_name}</li>`).join('')
+                  : '<li>No results found</li>';
+                suggestionsModalList.classList.remove('hidden');
+              }
+            } catch (err) {
+              console.error('Search failed:', err);
+            }
+          }, 300);
+        });
+      }
+
+      // Click suggestion
+      if (suggestionsModalList) {
+        suggestionsModalList.addEventListener('click', async (e) => {
+          if (e.target.tagName !== 'LI') return;
+          const lat = parseFloat(e.target.dataset.lat);
+          const lon = parseFloat(e.target.dataset.lon);
+          const name = e.target.textContent;
+          
+          if (!mapModal) {
+            initMapModal(lat, lon);
+          } else {
+            mapModal.flyTo([lat, lon], 16, { duration: 1.0 });
+          }
+          
+          currentLat = lat;
+          currentLng = lon;
+          mapCenterMarkerModal?.classList.remove('hidden');
+          
+          if (locationInputModal) locationInputModal.value = name;
+          if (suggestionsModalList) {
+            suggestionsModalList.innerHTML = '';
+            suggestionsModalList.classList.add('hidden');
+          }
+          await updateSelectedInfo(lat, lon);
+        });
+      }
+
+      // Hide suggestions on outside click
+      document.addEventListener('click', (e) => {
+        if (suggestionsModalList && !locationInputModal?.contains(e.target) && !suggestionsModalList.contains(e.target)) {
+          suggestionsModalList.classList.add('hidden');
+        }
+      });
+
+      // Fetch tile URL on load
+      fetchTileURL();
+    });
+  </script>
+
+
+
+</body>
+
+</html>

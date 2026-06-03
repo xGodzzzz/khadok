@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Restaurant Dine-In | Khadok</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <!-- Font Awesome & Boxicons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="css/khadok.consumer.sidebar.css">
+    <link rel="stylesheet" href="css/dine-in.css" />
+    
+    <!-- Three.js and Panolens for 3D/360 views -->
+    <script src="https://pchen66.github.io/js/three/three.min.js"></script>
+    <script src="https://pchen66.github.io/js/panolens/panolens.min.js"></script>
+</head>
+
+<body>
+    <!-- Consumer Sidebar -->
+    <div class="sidebar">
+        <div class="logo_content">
+            <div class="logo">
+                <div class="logo_name">Khadok</div>
+            </div>
+            <i class='bx bx-menu' id="btn"></i>
+        </div>
+        <ul class="nav_list">
+            <li>
+                <i class='bx bx-search-alt'></i>
+                <input type="text" placeholder="Search...">
+                <span class="tooltip">Search</span>
+            </li>
+            <li>
+                <a href="khadok.consumer.dashboard.html">
+                    <i class='bx bxs-grid-alt'></i>
+                    <span class="links_name">Dashboard</span>
+                </a>
+                <span class="tooltip">Dashboard</span>
+            </li>
+            <li>
+                <a href="khadok.consumer.user.html">
+                    <i class='bx bxs-user-circle'></i>
+                    <span class="links_name">User</span>
+                </a>
+                <span class="tooltip">User</span>
+            </li>
+            <li>
+                <a href="map.html">
+                    <i class='bx bx-navigation'></i>
+                    <span class="links_name">Map</span>
+                </a>
+                <span class="tooltip">Map</span>
+            </li>
+            <li>
+                <a href="khadok.consumer.order.html">
+                    <i class='bx bxs-package'></i>
+                    <span class="links_name">Orders</span>
+                </a>
+                <span class="tooltip">Orders</span>
+            </li>
+            <li>
+                <a href="khadok.consumer.reservation.html">
+                    <i class='bx bxs-calendar-check'></i>
+                    <span class="links_name">Reservations</span>
+                </a>
+                <span class="tooltip">Reservations</span>
+            </li>
+            <li>
+                <a href="khadok.consumer.cart.html">
+                  <i class='bx bxs-cart'></i>
+                  <span class="links_name">Cart</span>
+                </a>
+                <span class="tooltip">Cart</span>
+              </li>
+            <li>
+                <a href="khadok.consumer.setting.html">
+                    <i class='bx bxs-cog'></i>
+                    <span class="links_name">Settings</span>
+                </a>
+                <span class="tooltip">Settings</span>
+            </li>
+        </ul>
+        <div class="profile_content">
+            <div class="profile">
+                <div class="profile_details">
+                    <div class="name_job">
+                        <div class="name">Logout</div>
+                        <div class="job">Consumer</div>
+                    </div>
+                </div>
+                <button id="logoutButton" class="logout_button" onclick="logout()">
+                    <i class='bx bx-log-out-circle' id="log_out"></i>
+                    <span class="links_name">Logout</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header / Breadcrumbs -->
+        <div class="page-header">
+            <div class="breadcrumbs">
+                <span><a href="khadok.consumer.dashboard.html">Dashboard</a></span> &gt;
+                <span id="restaurant-breadcrumb">Restaurant Dine-In</span>
+            </div>
+            <h1 id="restaurant-name">Restaurant Dine-In</h1>
+        </div>
+
+        <!-- Restaurant Info Card -->
+        <div class="restaurant-info-card">
+            <div class="restaurant-image">
+                <img id="restaurant-picture" src="images/placeholder-restaurant.jpg" alt="Restaurant">
+            </div>
+            <div class="restaurant-details">
+                <h2 id="restaurant-name-detail">Loading...</h2>
+                <p id="restaurant-address"><i class="fas fa-map-marker-alt"></i> <span>Loading address...</span></p>
+                <p id="restaurant-hours"><i class="fas fa-clock"></i> <span>Loading hours...</span></p>
+                <p id="restaurant-rating"><i class="fas fa-star"></i> <span>Loading rating...</span></p>
+                <p id="restaurant-phone"><i class="fas fa-phone"></i> <span>Loading contact...</span></p>
+                <button class="btn-view-menu" id="viewMenuBtn">
+                    <i class="fas fa-utensils"></i> View Menu
+                </button>
+            </div>
+        </div>
+
+        <!-- Menu Modal Popup -->
+        <div id="menuModal" class="menu-modal" style="display: none;">
+            <div class="menu-modal-content">
+                <div class="menu-modal-header">
+                    <h2><i class="fas fa-utensils"></i> <span id="modal-restaurant-name">Restaurant Menu</span></h2>
+                    <button class="close-modal" id="closeMenuModal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <!-- Search & Sort Controls -->
+                <div class="menu-controls">
+                    <div class="menu-search-wrapper">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="menuSearchInput" placeholder="Search menu items..." />
+                        <!-- Live search results -->
+                        <div id="menuSearchResults" class="menu-search-results" style="display: none;"></div>
+                    </div>
+                    <div class="menu-sort-wrapper">
+                        <i class="fas fa-sort-amount-down-alt"></i>
+                        <select id="menuSortSelect">
+                            <option value="default">Sort By</option>
+                            <option value="priceLow">Price: Low to High</option>
+                            <option value="priceHigh">Price: High to Low</option>
+                            <option value="alphaAZ">Alphabetical (A–Z)</option>
+                            <option value="alphaZA">Alphabetical (Z–A)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Category Tabs -->
+                <div class="menu-tabs-wrapper">
+                    <div class="menu-tabs" id="menuCategoryTabs">
+                        <!-- Tabs will be injected here -->
+                    </div>
+                </div>
+
+                <!-- Menu Sections -->
+                <div class="menu-sections-container" id="menuSectionsContainer">
+                    <!-- Menu items will be injected here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 3D Interior View Section (View-Only) -->
+        <div class="section">
+            <h2><i class="fas fa-cube"></i> 3D Restaurant Layout</h2>
+            <div class="threeD-container">
+                <div id="threeDPreview" style="position: relative; width: 100%; height: 500px; overflow: hidden; background: #f5f5f5; border-radius: 8px;">
+                    <!-- Color Legend -->
+                    <div style="position: absolute; top: 12px; left: 12px; z-index: 20; background: rgba(255, 255, 255, 0.95); padding: 10px; border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 11px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); backdrop-filter: blur(4px);">
+                        <div style="font-weight: 600; margin-bottom: 8px; color: #333; font-size: 12px;">Table Legend</div>
+                        <div style="display: flex; flex-direction: column; gap: 4px;">
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <div style="width: 16px; height: 16px; background: #007bff; border-radius: 3px;"></div>
+                                <span style="color: #555;">2-Person</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <div style="width: 16px; height: 16px; background: #28a745; border-radius: 3px;"></div>
+                                <span style="color: #555;">4-Person</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <div style="width: 16px; height: 16px; background: #0dcaf0; border-radius: 3px;"></div>
+                                <span style="color: #555;">5-Person</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <div style="width: 16px; height: 16px; background: #ff7f50; border-radius: 3px;"></div>
+                                <span style="color: #555;">6-Person</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <div style="width: 16px; height: 16px; background: #ffc13c; border-radius: 3px;"></div>
+                                <span style="color: #555;">8-Person</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <div style="width: 16px; height: 16px; background: #6f42c1; border-radius: 3px;"></div>
+                                <span style="color: #555;">12-Person</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <div style="width: 16px; height: 16px; background: #c82333; border-radius: 3px;"></div>
+                                <span style="color: #555;">16-Person</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- View-only 3D floor preview -->
+                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: #888;">
+                        <i class="fas fa-cube" style="font-size: 48px; margin-bottom: 10px;"></i>
+                        <p>Loading 3D layout...</p>
+                    </div>
+                </div>
+            </div>
+            <p class="text-muted mt-2" style="font-size: 14px; color: #666; margin-top: 10px;">
+                <i class="fas fa-info-circle"></i> The 3D layout will rotate automatically. Drag to explore different angles.
+            </p>
+        </div>
+
+        <!-- Table Availability Section (View-Only) -->
+        <div class="section" id="table-availability">
+            <h2><i class="fas fa-chair"></i> Table Availability</h2>
+            <div class="availability-info">
+                <p class="total-tables-display">
+                    <i class="fas fa-table"></i> Total Tables: <strong id="totalTablesCount">Loading...</strong>
+                </p>
+            </div>
+            
+            <div class="table-grid">
+                <div class="table-category">
+                    <h3><img src="../images/2PersonTable.png" alt="2 Person" class="table-icon"> 2-Person Tables</h3>
+                    <p class="table-count"><strong id="table-2-count">0</strong> available</p>
+                </div>
+                <div class="table-category">
+                    <h3><img src="../images/4PersonTable.png" alt="4 Person" class="table-icon"> 4-Person Tables</h3>
+                    <p class="table-count"><strong id="table-4-count">0</strong> available</p>
+                </div>
+                <div class="table-category">
+                    <h3><img src="../images/5PersonTable.png" alt="5 Person" class="table-icon"> 5-Person Tables</h3>
+                    <p class="table-count"><strong id="table-5-count">0</strong> available</p>
+                </div>
+                <div class="table-category">
+                    <h3><img src="../images/6PersonTable.png" alt="6 Person" class="table-icon"> 6-Person Tables</h3>
+                    <p class="table-count"><strong id="table-6-count">0</strong> available</p>
+                </div>
+                <div class="table-category">
+                    <h3><img src="../images/8PersonTable.png" alt="8 Person" class="table-icon"> 8-Person Tables</h3>
+                    <p class="table-count"><strong id="table-8-count">0</strong> available</p>
+                </div>
+                <div class="table-category">
+                    <h3><img src="../images/12PersonTable.png" alt="12 Person" class="table-icon"> 12-Person Tables</h3>
+                    <p class="table-count"><strong id="table-12-count">0</strong> available</p>
+                </div>
+                <div class="table-category">
+                    <h3><img src="../images/16PersonTable.png" alt="16 Person" class="table-icon"> 16-Person Tables</h3>
+                    <p class="table-count"><strong id="table-16-count">0</strong> available</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 360 Interior View Section (View-Only) -->
+        <div class="section mb-5">
+            <h2><i class="fas fa-street-view"></i> 360° Interior View</h2>
+            <div id="panolens-container" style="width: 100%; height: 500px; background: #000; border-radius: 8px;"></div>
+            <p class="text-muted mt-2" style="font-size: 14px; color: #666; margin-top: 10px;">
+                <i class="fas fa-info-circle"></i> Drag to look around the restaurant interior
+            </p>
+        </div>
+
+        <!-- Reservation Form -->
+        <div class="reservation-section">
+            <h2><i class="fas fa-calendar-check"></i> Make a Table Reservation</h2>
+            
+            <form id="reservation-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="reservation-date"><i class="fas fa-calendar"></i> Reservation Date</label>
+                        <input type="date" id="reservation-date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reservation-time"><i class="fas fa-clock"></i> Reservation Time</label>
+                        <input type="time" id="reservation-time" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="table-size"><i class="fas fa-chair"></i> Table Type (Seats)</label>
+                        <select id="table-size" required>
+                            <option value="">Select table type</option>
+                            <option value="2">2-Person Table</option>
+                            <option value="4">4-Person Table</option>
+                            <option value="5">5-Person Table</option>
+                            <option value="6">6-Person Table</option>
+                            <option value="8">8-Person Table</option>
+                            <option value="12">12-Person Table</option>
+                            <option value="16">16-Person Table</option>
+                        </select>
+                        <small class="availability-hint" id="table-availability-hint" style="display: none; margin-top: 5px; color: #666;">
+                            <i class="fas fa-info-circle"></i> <span id="availability-text"></span>
+                        </small>
+                    </div>
+                    <div class="form-group">
+                        <label for="table-quantity"><i class="fas fa-hashtag"></i> Number of Tables</label>
+                        <input type="number" id="table-quantity" min="1" value="1" required>
+                        <small style="display: block; margin-top: 5px; color: #666; font-size: 13px;">
+                            How many tables of this type do you need?
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="special-message"><i class="fas fa-comment"></i> Special Message (Optional)</label>
+                    <textarea id="special-message" rows="4" maxlength="100" placeholder="Any special requests? (Max 100 characters)"></textarea>
+                    <small style="display: block; margin-top: 5px; color: #666; font-size: 13px;">
+                        <span id="char-count">0</span>/100 characters
+                    </small>
+                </div>
+
+                <div class="booking-summary" style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: none;" id="booking-summary">
+                    <h4 style="margin-bottom: 10px; color: #333;"><i class="fas fa-receipt"></i> Booking Summary</h4>
+                    <p style="margin: 5px 0;"><strong>Table Type:</strong> <span id="summary-table-type">-</span></p>
+                    <p style="margin: 5px 0;"><strong>Quantity:</strong> <span id="summary-quantity">-</span> table(s)</p>
+                    <p style="margin: 5px 0;"><strong>Date & Time:</strong> <span id="summary-datetime">-</span></p>
+                    <p style="margin: 5px 0;"><strong>Status:</strong> <span style="color: #ffc107;">Pending Confirmation</span></p>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="window.history.back()">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-check"></i> Confirm Reservation
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let btn = document.querySelector("#btn");
+        let sidebar = document.querySelector(".sidebar");
+        let searchBtn = document.querySelector(".bx-search-alt");
+
+        btn.onclick = function () {
+            sidebar.classList.toggle("active");
+        }
+        searchBtn.onclick = function () {
+            sidebar.classList.toggle("active");
+        }
+    </script>
+
+    <script>
+        async function logout() {
+            const sessionId = localStorage.getItem("sessionId");
+
+            if (!sessionId) {
+                alert("No session found.");
+                return;
+            }
+
+            try {
+                const res = await fetch("/api/auth/logout", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ sessionId }),
+                    credentials: "include",
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    localStorage.removeItem("sessionId");
+                    localStorage.removeItem("consumer_id");
+                    alert(data.message);
+                    window.location.href = '../login.html';
+                } else {
+                    alert(data.message || "Logout failed.");
+                    window.location.href = '../login.html';
+                }
+            } catch (err) {
+                console.error("Logout error:", err);
+                alert("Something went wrong.");
+                window.location.href = '../login.html';
+            }
+        }
+    </script>
+
+    <script>
+        (function checkAuthOnLoad() {
+            const sessionId = localStorage.getItem("sessionId");
+            if (!sessionId) {
+                window.location.replace("../login.html");
+            }
+        })();
+    </script>
+
+    <!-- Dine-In JS -->
+    <script src="js/dine-in.js"></script>
+</body>
+
+</html>

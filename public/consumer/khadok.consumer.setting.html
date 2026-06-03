@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Settings</title>
+    <link rel="stylesheet" href="css/khadok.consumer.sidebar.css">
+    <link rel="stylesheet" href="css/khadok.consumer.dashboard.css">
+    <link rel="stylesheet" href="css/khadok.consumer.setting.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo_content">
+            <div class="logo">
+                
+                <div class="logo_name">Khadok
+
+                </div>
+            </div>
+            <i class='bx bx-menu' id="btn"></i>
+        </div>
+        <ul class="nav_list">
+            <li>
+                
+                    <i class='bx bx-search-alt'></i>
+                    <input type="text" placeholder="Search...">
+                
+                <span class="tooltip">Search </span>
+            </li>
+            <li>
+                <a href="khadok.consumer.dashboard.html">
+                    <i class='bx bxs-grid-alt'></i>
+                    <span class="links_name">Dashboard</span>
+                </a>
+                <span class="tooltip">Dashboard</span>
+            </li>
+            <li>
+                <a href="khadok.consumer.user.html">
+                    <i class='bx bxs-user-circle'></i>
+                    <span class="links_name">User</span>
+                </a>
+                <span class="tooltip">User</span>
+            </li>
+            <li>
+                <a href="map.html">
+                    <i class='bx bx-navigation'></i>
+                    <span class="links_name">Map</span>
+                </a>
+                <span class="tooltip">Map</span>
+            </li>
+           
+            <li>
+                <a href="khadok.consumer.order.html">
+                    <i class='bx bxs-package'></i>
+                    <span class="links_name">Orders</span>
+                </a>
+                <span class="tooltip">Orders</span>
+            </li>
+
+            <li>
+                <a href="khadok.consumer.reservation.html">
+                    <i class='bx bxs-calendar-check'></i>
+                    <span class="links_name">Reservations</span>
+                </a>
+                <span class="tooltip">Reservations</span>
+            </li>
+            <li>
+                <a href="khadok.consumer.cart.html">
+                  <i class='bx bxs-cart'></i>
+                  <span class="links_name">Cart</span>
+                </a>
+                <span class="tooltip">Cart</span>
+              </li>
+            <li>
+                <a href="khadok.consumer.setting.html" class="active">
+                    <i class='bx bxs-cog'></i>
+                    <span class="links_name">Settings</span>
+                </a>
+                <span class="tooltip">Settings</span>
+            </li>
+        </ul>
+        <div class="profile_content">
+            <div class="profile">
+                <div class="profile_details">
+                    <div class="name_job">
+                        <div class="name">Logout</div>
+                        <div class="job">Consumer</div>
+                    </div>
+                </div>
+                <button id="logoutButton" class="logout_button">
+                    <i class='bx bx-log-out-circle' id="log_out"></i>
+                    <span class="links_name">Logout</span>
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="home_content">
+        <div class="settings-shell">
+            <header class="settings-hero">
+                <div>
+                    <span class="pill">Personal control center</span>
+                    <h1>Account settings</h1>
+                    <p class="muted">Tune your identity, preferences, and security. Changes are saved instantly.</p>
+                </div>
+            </header>
+
+            <section class="settings-grid">
+                <div class="card">
+                    <div class="card-title">
+                        <h3>Profile information</h3>
+                        <span class="muted">Public details</span>
+                    </div>
+                    <form id="profileForm">
+                        <div class="grid-two">
+                            <div class="input-group">
+                                <label for="username">Full name</label>
+                                <input type="text" id="username" name="username" placeholder="Your full name" required>
+                            </div>
+                            <div class="input-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" name="email" placeholder="you@email.com" required>
+                            </div>
+                        </div>
+                        <div class="grid-two">
+                            <div class="input-group">
+                                <label for="phone">Phone</label>
+                                <input type="text" id="phone" name="phone" placeholder="01XXXXXXXXX">
+                            </div>
+                            <div class="input-group">
+                                <label for="addressLine">Address</label>
+                                <input type="text" id="addressLine" name="addressLine" placeholder="Street, area, or locality">
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label for="city">City</label>
+                            <input type="text" id="city" name="city" placeholder="City">
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn primary">Save profile</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">
+                        <h3>Change password</h3>
+                        <span class="muted">Last updated 2 months ago</span>
+                    </div>
+                    <form id="passwordForm">
+                        <div class="input-group">
+                            <label for="oldPassword">Current password</label>
+                            <input type="password" id="oldPassword" name="oldPassword" required>
+                        </div>
+                        <div class="grid-two">
+                            <div class="input-group">
+                                <label for="newPassword">New password</label>
+                                <input type="password" id="newPassword" name="newPassword" required>
+                            </div>
+                            <div class="input-group">
+                                <label for="confirmPassword">Confirm password</label>
+                                <input type="password" id="confirmPassword" name="confirmPassword" required>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn primary">Update password</button>
+                        </div>
+                    </form>
+                </div>
+
+
+                <div class="card">
+                    <div class="card-title">
+                        <h3>Notifications</h3>
+                        <span class="muted">Stay in the loop</span>
+                    </div>
+                    <div class="toggle-list">
+                        <div class="toggle-row">
+                            <div>
+                                <h4>Order updates</h4>
+                                <p class="muted">Real time delivery status alerts.</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="toggle-row">
+                            <div>
+                                <h4>Promotions</h4>
+                                <p class="muted">Discounts and new restaurant drops.</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="toggle-row">
+                            <div>
+                                <h4>Reservation reminders</h4>
+                                <p class="muted">Notify 1 hour before dine in time.</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">
+                        <h3>Privacy</h3>
+                        <span class="muted">Data controls</span>
+                    </div>
+                    <form id="privacyForm">
+                        <div class="toggle-row">
+                            <div>
+                                <h4>Share order insights</h4>
+                                <p class="muted">Help improve recommendations.</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="toggle-row">
+                            <div>
+                                <h4>Location history</h4>
+                                <p class="muted">Save pickup points for faster checkout.</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn primary">Save privacy</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">
+                        <h3>Linked accounts</h3>
+                        <span class="muted">Sign in faster</span>
+                    </div>
+                    <div class="link-grid">
+                        <button type="button" class="btn ghost"><i class="fab fa-google"></i> Link Google</button>
+                        <button type="button" class="btn ghost"><i class="fab fa-facebook"></i> Link Facebook</button>
+                    </div>
+                </div>
+
+                <div class="card danger-zone">
+                    <div class="card-title">
+                        <h3>Danger zone</h3>
+                        <span class="muted">Handle with care</span>
+                    </div>
+                    <p class="muted">Deactivate your account if you no longer want to use Khadok. This action can be reversed by support.</p>
+                    <button type="button" class="btn danger">Deactivate account</button>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script src="js/khadok.consumer.setting.js"></script>
+    <script>
+        let btn = document.querySelector("#btn"); 
+        let sidebar = document.querySelector(".sidebar");
+        let searchBtn = document.querySelector(".bx-search-alt");  
+
+        btn.onclick = function(){
+            sidebar.classList.toggle("active");
+        }
+        searchBtn.onclick = function(){
+            sidebar.classList.toggle("active");
+        }
+    </script>
+    <script>
+        async function logout() {
+            const sessionId = localStorage.getItem("sessionId");
+
+            if (!sessionId) {
+                alert("No session found.");
+                return;
+            }
+
+            try {
+                const res = await fetch("/api/auth/logout", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ sessionId }),
+                    credentials: "include", // Include the session cookie in the request
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    localStorage.removeItem("sessionId"); // Clear sessionId from localStorage after logout
+                    alert(data.message); // Show success message
+                    window.location.href = '../login.html';
+                } else {
+                    alert(data.message || "Logout failed.");
+                    window.location.href = '../login.html'; // Redirect to login page on error
+                }
+            } catch (err) {
+                console.error("Logout error:", err);
+                alert("Something went wrong.");
+                window.location.href = '../login.html'; // Redirect to login page on error
+            }
+        }
+
+        const logoutButton = document.getElementById("logoutButton");
+        logoutButton.addEventListener("click", logout);
+    </script>
+</body>
+</html>
