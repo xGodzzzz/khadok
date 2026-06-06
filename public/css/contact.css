@@ -1,0 +1,422 @@
+/* Base reset and typography */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, html {
+  height: 100%;
+  font-family: 'Roboto', sans-serif;
+  background: #f4f6f9;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+
+/* ────── HEADER BASE ────── */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 65px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  z-index: 100;
+  transition: transform 0.6s cubic-bezier(0.25,0.8,0.25,1);
+}
+.hidden {
+  transform: translateY(-100%); /* Hide the header by moving it up */
+  transition: .5s ease-in-out; /* Smooth transition */
+
+}
+  .visible {
+      transform: translateY(0); /* Show the header by moving it back down */
+      transition: .5s ease-in-out; /* Smooth transition */
+  }
+/* logo */
+.logo-link {
+  display: flex;
+  align-items: center;
+  margin-left: 20px;
+  text-decoration: none;
+}
+.brand-logo {
+  width: 40px;
+  margin-right: 8px;
+}
+.logo-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: #101812;
+}
+
+/* nav & list (desktop) */
+.menu-toggle {
+  display: none;      /* hidden on desktop */
+}
+nav {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+header nav ul {
+  display: flex;
+  gap: 20px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-decoration: none;
+}
+header nav ul li {
+  margin: 0;
+}
+header nav ul li a {
+  display: block;
+  padding: 8px 12px;
+  font-size: 16px;
+  color: #101812;
+  text-decoration: none;
+  transition: background .3s, color .3s;
+}
+header nav ul li a:hover {
+  background: rgba(255,255,255,0.3);
+  color: #f4f4f4;
+}
+
+/* user icon */
+header > ul {
+  display: flex;
+  list-style: none;
+  margin-right: 20px;
+}
+.user-icon a {
+  font-size: 28px;
+  color: #101812;
+  transition: color .3s;
+}
+.user-icon a:hover {
+  color: #5A8765;
+}
+
+/* ────── MOBILE ────── */
+@media (max-width: 768px) {
+  /* show hamburger */
+  .menu-toggle {
+    display: block;
+    font-size: 1.6rem;
+    cursor: pointer;
+    color: #101812;
+    margin-right: 20px;
+  }
+
+  /* collapse nav into drawer */
+  nav {
+    position: absolute;
+    top: 80px;
+    left: 0;
+    width: 100%;
+    background: rgba(255,255,255,0.95);
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+  /* vertical list, full-width items */
+  header nav ul {
+    flex-direction: column;
+    gap: 0;
+  }
+  header nav ul li a {
+    padding: 12px 20px;
+    border-bottom: 1px solid #eee;
+  }
+
+  
+
+  /* when you add `.open` to <header>, the menu expands */
+  header.open nav {
+    max-height: 300px; /* adjust as needed */
+  }
+}
+
+
+/* 1) Hamburger toggle – keep this from before */
+.menu-toggle {
+  display: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #101812;
+  margin-right: 20px;
+}
+
+/* 2) Mobile-specific */
+@media (max-width: 768px) {
+  /* show the hamburger */
+  .menu-toggle {
+    display: block;
+  }
+
+  /* collapse nav by default */
+  nav {
+    position: absolute;
+    top: 65px;        /* header height */
+    left: 0;
+    width: 100%;
+    background: rgba(255,255,255,0.95);
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    z-index: 9;
+  }
+
+  /* reset list offsets & switch to vertical */
+  header nav ul {
+    display: flex;
+    flex-direction: column;
+    margin: 0;        /* kill your -56px / -7px */
+    padding: 0;
+  }
+
+  /* full-width items */
+  header nav ul li {
+    margin: 0;
+    padding: 12px 20px;
+  }
+
+  /* separator lines (optional) */
+  header nav ul li + li {
+    border-top: 1px solid #eee;
+  }
+
+  /* expand when open */
+  .nav-bar.open nav {
+    max-height: 500px;  /* tall enough for all items */
+  }
+  .nav-menu {
+    position: absolute;
+    top: 65px;
+    left: 0;
+    width: 100%;
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    display: none;
+}
+}
+
+
+
+
+/* Container sits below the fixed header */
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 100px auto 40px;   /* 100px top to clear the 80px header + 20px breathing room */
+  padding: 40px 20px;
+  background: linear-gradient(135deg, #101812, #5a8765);
+
+  border-radius: 6px;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+  box-sizing: border-box;
+}
+
+/* Flex layout & wrapping */
+.container .content {
+  display: flex;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+/* Left pane (contact details) */
+.left-side {
+  flex: 1 1 280px;       /* grow/shrink, min-width 280px */
+  color: #f1f0EA;
+  position: relative;
+  text-align: center;
+  padding: 20px;
+}
+.left-side::before {
+  content: '';
+  position: absolute;
+  height: 70%;
+  width: 2px;
+  right: -15px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #f1f0EA;
+}
+.left-side .details {
+  margin: 14px 0;
+}
+.left-side .details i {
+  font-size: 30px;
+  color: #5A8765;
+  margin-bottom: 10px;
+}
+.left-side .topic {
+  font-size: 18px;
+  font-weight: 500;
+}
+.left-side .text-one,
+.left-side .text-two {
+  font-size: 14px;
+  color: #f1f0EA;
+}
+
+/* Right pane (form) */
+.right-side {
+  flex: 2 1 320px;       /* take twice the space, min-width 320px */
+  padding: 20px;
+  
+  border-radius: 6px;
+}
+.right-side .topic-text {
+  font-size: 23px;
+  font-weight: 600;
+  color: #101812;
+  margin-bottom: 10px;
+}
+.right-side p {
+  color: #101812;
+  margin-bottom: 20px;
+}
+.input-box {
+  margin-bottom: 15px;
+  width: 100%;
+}
+.input-box input,
+.input-box textarea {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  resize: none;
+}
+.input-box.message-box {
+  height: auto;
+}
+.input-box.message-box textarea {
+  min-height: 110px;
+}
+.button input[type="button"] {
+  background: #101812;
+  color: #fff;
+  padding: 12px 25px;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+.button input[type="button"]:hover {
+  background: #5A8765;
+  color: #333;
+}
+
+
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 20px 10px;
+  background: transparent;
+  color: #000;
+  font-family: 'Open Sans', sans-serif;
+  position: relative;
+  margin-top: auto;
+}
+
+.footer-divider {
+  border: none;
+  border-top: 2px solid #000; /* Black line at the top */
+  margin: 0 auto;
+  width: 90%;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 20px auto;
+}
+
+.footer-links {
+  margin: 15px 0;
+}
+
+.footer-links a {
+  color: #000;
+  text-decoration: none;
+  margin: 0 10px;
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: #5A8765; /* Highlight color on hover */
+}
+
+.social-media-icons {
+  margin-top: 10px;
+}
+
+.social-media-icons a {
+  color: #000;
+  font-size: 1.5rem;
+  margin: 0 10px;
+  transition: color 0.3s ease;
+}
+
+.social-media-icons a:hover {
+  color: #5A8765; /* Highlight color on hover */
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 768px) {
+  .nav-bar nav ul,
+  .nav-bar > ul {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .content {
+    flex-direction: column;
+  }
+
+  .left-side,
+  .right-side {
+    width: 100%;
+  }
+
+  .nav-bar {
+    align-items: flex-start;
+  }
+
+  .footer-links {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .brand-logo {
+    height: 30px;
+  }
+
+  .topic-text {
+    font-size: 20px;
+  }
+
+  .button input[type="button"] {
+    width: 100%;
+  }
+}
