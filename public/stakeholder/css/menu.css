@@ -1,0 +1,1135 @@
+/* General Page Styles */
+html {
+  font-size: 80%;
+}
+
+body {
+  font-family: Poppins, sans-serif;
+  margin: 0;
+  padding: 0 1.5rem 0 0 ;
+  background-color: #f8f9fa;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  transition: grid-template-columns 0.3s ease-in-out;
+  
+}
+
+/* Replace your existing .sidebar rule’s position */
+.sidebar {
+  position: -webkit-sticky;
+  /* for Safari */
+  position: sticky;
+  top: 0;
+  /* stick to the very top */
+  height: 100vh;
+  /* full viewport height */
+  overflow-y: auto;
+  /* allow internal scroll if items exceed height */
+  width: 80px;
+  /* collapsed width */
+  transition: width 0.3s ease-in-out;
+  background-color: #2a3d66;
+  color: #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sidebar.expanded {
+  width: 260px;
+  /* Expanded width */
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  /* Full width for clickable area */
+}
+
+/* Sidebar hover effects */
+.sidebar ul li {
+  padding: 15px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Center icons in collapsed state */
+  cursor: pointer;
+  text-decoration: none;
+  color: #f0f0f0;
+  /* Ensure consistent text color */
+  transition: background-color 0.2s ease-in-out, transform 0.2s;
+}
+
+.sidebar ul li a {
+  list-style: none;
+  text-decoration: none;
+  color: #f0f0f0;
+
+}
+
+.sidebar.expanded ul li {
+  justify-content: flex-start;
+}
+
+.sidebar ul li:hover {
+  background-color: #4c5a88;
+}
+
+.sidebar ul li i {
+  font-size: 1.2rem;
+  color: inherit;
+  /* Ensure consistent icon color */
+}
+
+.sidebar ul li span {
+  display: none;
+  /* Hide names in collapsed state */
+}
+
+.sidebar.expanded ul li span {
+  display: inline;
+  /* Show names in expanded state */
+  margin-left: 15px;
+  /* Add space for expanded state */
+}
+
+/* Tooltip for hover in collapsed mode only */
+.sidebar:not(.expanded) ul li:hover::after {
+  content: attr(data-title);
+  position: absolute;
+  left: 90px;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #4c5a88;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 5px;
+  white-space: nowrap;
+  font-size: 0.9rem;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.sidebar:not(.expanded) ul li:hover::after {
+  opacity: 1;
+  transform: translateY(-50%) scale(1);
+}
+
+/* Sidebar hover effects */
+.sidebar ul li:hover {
+  background-color: #4c5a88;
+  transform: scale(1.05);
+}
+
+/* Active menu item styling */
+.sidebar ul li.active {
+  background-color: #4c5a88;
+  border-left: 4px solid #5dade2;
+}
+
+
+/* Sidebar Toggle Button */
+.toggle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 15px 20px;
+  background-color: #1f2c4a;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.toggle-btn i {
+  font-size: 1.5rem;
+}
+
+.toggle-btn:hover {
+  background-color: #354870;
+}
+
+
+/* Logout Button */
+.logout-btn {
+  margin-top: auto;
+  width: 100%;
+  text-align: center;
+  padding: 15px 0;
+  background-color: #1f2c4a;
+  color: #f0f0f0;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.logout-btn:hover {
+  background-color: #354870;
+}
+
+.logout-btn i {
+  font-size: 1.2rem;
+  margin-right: 10px;
+}
+
+
+
+
+
+/* ============================================================================
+   LAYOUT & CONTAINER
+   ============================================================================ */
+   .main-content {
+    grid-column: 2 / 3;
+    max-width: 900px;         /* Set a narrower maximum width */
+    width: 100%;              /* Ensure it scales responsively */
+    margin: 0 auto;           /* Center horizontally */
+    padding: 1.5rem;
+    transition: 0.3s ease-in-out;
+    overflow-x: hidden
+  }
+  
+
+
+
+/* ============================================================================
+     HEADER & BREADCRUMBS
+     ============================================================================ */
+.page-header {
+  margin-bottom: 1.5rem;
+}
+
+.breadcrumbs {
+  font-size: 0.9rem;
+  color: #777;
+  margin-bottom: 0.5rem;
+}
+
+.breadcrumbs a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.breadcrumbs a:hover {
+  color: #333;
+}
+
+.page-header h1 {
+  font-size: 2.25rem;
+  color: #222;
+  margin: 0;
+}
+
+/* ============================================================================
+     CONTROLS (SEARCH & SORT)
+     ============================================================================ */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  justify-content: space-between;
+}
+
+.controls select,
+.controls input {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.controls select:focus,
+.controls input:focus {
+  border-color: #888;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+  outline: none;
+}
+
+.controls input {
+  flex: 1;
+}
+
+
+/*Edit Button */
+#reorderCategoriesBtn{
+  flex: 0 0 auto;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  border: 1px solid #ccc;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+#reorderCategoriesBtn:hover {
+  background: #f5f5f5;
+  border-color: #999;
+}
+#reorderCategoriesBtn.active {
+  background: #00b894;
+  border-color: #00b894;
+  color: white;
+}
+
+/* ---------- Search Bar ---------- */
+.search-wrapper {
+  position: relative;
+  flex: 1;
+  max-width: 400px;
+  width: 100%;
+  display: flex;
+}
+
+.search-wrapper input {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 2.5rem;
+  font-size: 1rem;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  outline: none;
+  background: #fff;
+  transition: border 0.3s, box-shadow 0.3s;
+}
+
+.search-wrapper input:focus {
+  border-color: #00b894;
+  box-shadow: 0 0 0 4px rgba(255, 102, 0, 0.1);
+}
+
+.search-icon {
+  position: absolute;
+  top: 50%;
+  left: 0.75rem;
+  transform: translateY(-50%);
+  color: #888;
+  font-size: 1rem;
+}
+
+/* ---------- Sort Dropdown ---------- */
+.sort-wrapper {
+  position: relative;
+  display: inline-block;
+  max-width: 160px; /* or any width that fits your layout */
+  white-space: nowrap; /* prevent wrapping inside */
+ 
+}
+.sort-wrapper .sort-icon {
+  position: absolute;
+  top: 50%;
+  right: 0.75rem;
+  transform: translateY(-50%);
+  color: #888;
+  font-size: 1rem;
+}
+
+.sort-wrapper select {
+  appearance: none;
+  padding: 0.75rem 2.5rem 0.75rem 1rem;
+  font-size: 1rem;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  outline: none;
+  background: #fff;
+  transition: border 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+}
+
+.sort-wrapper select:focus {
+  border-color: #00b894;
+  box-shadow: 0 0 0 4px rgba(0, 184, 148, 0.1);
+}
+
+.sort-icon {
+  position: absolute;
+  top: 50%;
+  right: 0.75rem;
+  transform: translateY(-50%);
+  color: #555;
+  pointer-events: none;
+  font-size: 1rem;
+}
+
+/* ---------- Live Search Results Panel ---------- */
+/* Make search-results align with input width */
+.search-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0; /* Use both left and right to fill full width */
+  margin-top: 4px;
+  background: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  max-height: 350px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  animation: fadeIn 0.3s ease;
+  z-index: 999;
+  width: 100%; /* Ensure it fills the width of the input */
+}
+
+.search-result-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+  
+}
+
+.search-result-item:not(:last-child) {
+  border-bottom: 1px solid #eee;
+}
+
+.search-result-item:hover {
+  background: #fef4e9;
+  transform: scale(1.01);
+}
+
+.search-result-item .item-name {
+  font-weight: 500;
+  color: #333;
+}
+
+.search-result-item .category-label {
+  background: #ffeaa7;
+  padding: 0.25rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  color: #6d4c41;
+  font-weight: bold;
+}
+
+/* ---------- Animations ---------- */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* flash highlight on target card */
+@keyframes highlight-card {
+  0%   { background-color: #fffae6; border: 2px solid #a8ff07; }   /* Red-orange */
+  50%  { background-color: #fff3cd; border: 2px solid #a8ff07; }   /* Yellow-orange */
+  75%  { background-color: #f0ffe0; border: 2px solid #a8ff07; }   /* Light green */
+  100% { background-color: transparent; border: none; }
+}
+
+.menu-card.flash-highlight {
+  animation: highlight-card 5s ease-out;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ============================================================================   
+   TABS CONTAINER + HORIZONTAL SCROLLER
+============================================================================ */
+.tabs-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tabs-scroll-wrapper {
+  display: flex;
+  align-items: center;
+  flex: 1 1 0;   /* allow to grow/shrink */
+  min-width: 0;  /* allow to shrink below its content width */
+  gap: 4px;
+}
+
+.scroll-btn {
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.scroll-btn:hover {
+  background: #f0f0f0;
+}
+
+/* The wrapper that actually scrolls */
+.scrollable-tabs {
+  flex: 1 1 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  /* hide native scrollbar */
+  -ms-overflow-style: none;  /* IE/Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+.scrollable-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+/* The actual row of buttons */
+.tabs {
+  display: inline-flex;    /* one row, no wrap */
+  gap: 8px;
+  white-space: nowrap;
+}
+
+/* ============================================================================   
+   INDIVIDUAL TAB BUTTONS
+============================================================================ */
+.tab-btn {
+  flex: 0 0 auto;          /* never shrink */
+  padding: 8px 14px;
+  background-color: #f5f5f5;
+  border-radius: 20px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-weight: 600;
+  color: #1f2c4a;
+  transition:
+    background-color 0.2s,
+    transform 0.2s,
+    box-shadow 0.2s,
+    border-color 0.2s;
+  user-select: none;
+  background: #e3e3e3;
+}
+.tab-btn:hover {
+  background-color: #e0e0e0;
+}
+
+/* Drag-and-drop feedback */
+.tab-btn.dragging {
+  opacity: 0.7;
+  transform: scale(1.05);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+}
+.tab-btn.dragging::after {
+  content: '';
+  display: inline-block;
+  width: 80px;
+  height: 32px;
+  margin: 4px;
+}
+.tab-btn.drag-over {
+  outline: 2px dashed #007bff;
+  background-color: #eef7ff;
+}
+
+/* ============================================================================   
+   EDIT BUTTON
+============================================================================ */
+.edit-btn {
+  flex: 0 0 auto;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  border: 1px solid #ccc;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+.edit-btn:hover {
+  background: #f5f5f5;
+  border-color: #999;
+}
+.edit-btn.active {
+  background: #00b894;
+  border-color: #00b894;
+  color: white;
+}
+.edit-btn i {
+  pointer-events: none;
+}
+
+
+
+
+/* Flashing highlight animation for category tab area */
+@keyframes highlight-tabs {
+  0%   { background-color: #fffae6; border: 2px solid #a8ff07; }
+  50%  { background-color: #fff3cd; border: 2px solid #a8ff07; }
+  75%  { background-color: #f0ffe0; border: 2px solid #a8ff07; }
+  100% { background-color: transparent; border: none; }
+}
+
+/* Static green glow effect */
+.tabs-flash-highlight {
+  background-color: #f0ffe0; /* light green */
+  border: 2px solid #00B894; /* bright green border */
+  border-radius: 8px;
+  box-shadow: 0 0 12px #a8ff07;
+  transition: all 0.3s ease-in-out;
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+  0%   { box-shadow: 0 0 8px #a8ff07; }
+  50%  { box-shadow: 0 0 16px #a8ff07; }
+  100% { box-shadow: 0 0 8px #a8ff07; }
+}
+
+
+/* Reorder message box */
+.reorder-message {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+  font-size: 14px;
+  margin-top: 10px;
+  padding: 8px 16px;
+  border-left: 4px solid #a8ff07;
+  background-color: #f0ffe0;
+  border-radius: 4px;
+  color: #333;
+
+
+}
+
+/* Show message */
+.reorder-message.active {
+  opacity: 1;
+  transform: translateY(0);
+
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+
+
+
+
+
+
+
+/* ============================================================================
+     MENU SECTIONS & HEADERS
+     ============================================================================ */
+
+#menuSections{
+  transition: transform 0.3s ease-out;
+  
+}
+  
+.menu-section {
+  margin-bottom: 3rem;
+}
+
+.menu-section h2 {
+  margin: 1rem 0;
+  font-size: 1.75rem;
+  color: #333;
+  border-left: 4px solid #00b894;
+  padding-left: 0.75rem;
+}
+.image-container {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 10px;
+}
+
+.action-icons {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  gap: 6px;
+}
+
+.icon-btn {
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.icon-btn:hover {
+  background-color: #00B894;
+}
+
+.icon-btn i {
+  font-size: 14px;
+}
+
+
+/* ============================================================================
+     GRID & CARDS
+     ============================================================================ */
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+.menu-card {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  overflow: hidden;
+  text-align: left;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.menu-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.menu-card img {
+  width: 100%;
+  height: 200px;
+  /* slightly smaller */
+  object-fit: cover;
+}
+
+.menu-card img:hover {
+  transform: scale(1.05);
+  transition: transform 0.3s ease;
+}
+
+.menu-card .info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0.75rem;
+  flex: 1;
+}
+
+.menu-card h3 {
+  font-size: 1rem;
+  margin: 0 0 0.25rem;
+  color: #222;
+  line-height: 1.2;
+}
+
+.menu-card .desc {
+  font-size: 0.85rem;
+  color: #666;
+  margin: 0 0 0.5rem;
+  padding: 0 0 1.5rem;
+
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  /* default to 4 lines */
+  -webkit-line-clamp: 4;
+}
+
+.menu-card .price {
+  margin-top: auto;
+  /* Push to bottom */
+  font-weight: 700;
+  color: #00b894;
+  font-size: 1rem;
+}
+
+
+/* ============================================================================
+     ADD-CARD (NEW ITEM)
+     ============================================================================ */
+.add-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed #ccc;
+  color: #888;
+  font-size: 1.5rem;
+  cursor: pointer;
+  border-radius: 6px;
+  padding: 1rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.add-card:hover {
+  
+  border-color: #00B894;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.add-card:hover i {
+  color: #00B894;
+  transform: translateY(-5px);
+  transition: color 0.4s, transform 0.5s;
+}
+.add-card:hover span {
+  color: #00B894;
+}
+
+
+.add-card i {
+  font-size: 2rem;
+  margin-bottom: 0.25rem;
+}
+.add-card span:hover {
+  color: #00B894;
+  transition: color 0.2s;
+}
+
+.add-card span {
+  font-size: 0.9rem;
+}
+
+/* ============================================================================
+     RESPONSIVE
+     ============================================================================ */
+@media (max-width: 1200px) {
+  .menu-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .controls {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .menu-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .menu-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+
+/* Overlay */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 15, 15, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(3px);
+}
+
+/* Popup content */
+.popup-content {
+  background: #fff;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 480px;
+  /* smaller max */
+  padding: 1.5rem;
+  /* reduced padding */
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+  animation: fadeInScale 0.3s ease-out;
+  position: relative;
+  overflow-y: auto;
+  max-height: 90vh;
+}
+
+/* Animation */
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+
+
+
+/* Popup title */
+.popup-screen h2 {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Form labels and inputs */
+.popup-screen label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: #2e2e2e;
+  font-size: 0.95rem;
+}
+
+.popup-screen input[type="text"],
+.popup-screen input[type="number"],
+.popup-screen input[type="file"],
+.popup-screen textarea {
+  width: 90%;
+  padding: 0.75rem 1.1rem;
+  border-radius: 12px;
+  border: 2px solid transparent;
+  font-size: 1rem;
+  background-color: #f3f4f6;
+  box-shadow: inset 0 0 0 1px #d1d5db;
+  transition: all 0.3s ease;
+}
+
+.popup-screen input:focus,
+.popup-screen textarea:focus {
+  background-color: #fff;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
+  outline: none;
+}
+
+/* Button group */
+.button-group {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.primary-btn,
+.secondary-btn {
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.primary-btn {
+  background-color: #4f46e5;
+  color: white;
+}
+
+.primary-btn:hover {
+  background-color: #4338ca;
+}
+
+.secondary-btn {
+  background-color: #e5e7eb;
+  color: #333;
+}
+
+.secondary-btn:hover {
+  background-color: #d1d5db;
+}
+
+/* Cuisine checkboxes */
+.checkbox-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.75rem;
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  background-color: white;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+}
+
+.checkbox-group label:hover {
+  background-color: #f1f5f9;
+}
+
+.checkbox-group input[type="checkbox"] {
+  accent-color: #4f46e5;
+  transform: scale(1.1);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/* ===========================================
+   MENU PAGE RESPONSIVE LAYOUT
+   =========================================== */
+
+/* Tablet & small desktop (≤992px) */
+@media (max-width: 992px) {
+
+  /* Remove sidebar offset */
+  .main-content,
+  .sidebar.expanded~.main-content {
+    margin-left: 0 !important;
+    padding: .75rem;
+  }
+
+  /* Make tabs horizontally scrollable */
+  .tabs {
+    display: flex;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    gap: 0.25rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .tab-btn {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  /* Two-column menu grid */
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 0.75rem;
+  }
+}
+
+/* Phone (≤600px) */
+@media (max-width: 600px) {
+
+  /* Remove sidebar offset & shrink padding */
+  .main-content,
+  .sidebar.expanded~.main-content {
+    margin-left: 0 !important;
+    padding: 0.75rem;
+  }
+
+  /* Smaller header text */
+  .page-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .breadcrumbs {
+    font-size: 0.8rem;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Tabs scroll and shrink */
+  .tabs {
+    gap: 0.25rem;
+  }
+
+  .tab-btn {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.9rem;
+  }
+
+  /* Single-column menu grid */
+  .menu-grid {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  /* Shrink card text & icon */
+  .menu-card h3 {
+    font-size: 0.9rem;
+  }
+
+  .menu-card .desc {
+    font-size: 0.8rem;
+  }
+
+  .menu-card .price {
+    font-size: 0.9rem;
+  }
+
+  .add-card {
+    font-size: 1.5rem;
+    padding: 0.5rem;
+  }
+}
